@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIDGUARD AI - ERCOT COMMAND CENTER</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background-color: #0D0F14;
+    color: #D0D0D0;
+    font-size: 11px;
+    line-height: 1.4;
+    overflow: hidden;
+  }
+  
+  button, input, div, section {
+    border-radius: 0 !important;
+  }
+  
+  header {
+    background-color: #1A1D23;
+    height: 44px;
+    border-bottom: 1px solid #FF9500;
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+  }
+  
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #FF9500 0%, transparent 100%);
+    opacity: 0.3;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .system-id {
+    color: #FF9500;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  
+  .status-block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background-color: #1A1D23;
+    border: 1px solid #2A2D35;
+    clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+  }
+  
+  .status-led {
+    width: 6px;
+    height: 6px;
+    background-color: #00D4AA;
+    animation: blink 2s ease-in-out infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  
+  .status-text {
+    font-size: 9px;
+    color: #00D4AA;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .header-center {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 0 20px;
+  }
+  
+  .metric-unit {
+    background-color: #0D0F14;
+    border: 1px solid #2A2D35;
+    padding: 4px 8px;
+    border-left: 2px solid #3BAFDA;
+  }
+  
+  .metric-unit.warning {
+    border-left-color: #F7A500;
+  }
+  
+  .metric-unit.critical {
+    border-left-color: #E23557;
+  }
+  
+  .metric-label {
+    font-size: 8px;
+    color: #707070;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  
+  .metric-value {
+    font-size: 13px;
+    color: #FF9500;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  .alert-indicator {
+    background-color: #1A1D23;
+    border: 1px solid #E23557;
+    padding: 4px 10px;
+    font-size: 9px;
+    color: #E23557;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .alert-indicator:hover {
+    background-color: #E23557;
+    color: #000;
+  }
+  
+  .operator-id {
+    font-size: 9px;
+    color: #707070;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid #2A2D35;
+  }
+  
+  #container {
+    display: grid;
+    grid-template-columns: 200px 1fr 280px;
+    height: calc(100vh - 44px);
+    background-color: #0D0F14;
+  }
+  
+  nav {
+    background-color: #0D0F14;
+    border-right: 1px solid #2A2D35;
+    overflow-y: auto;
+    padding: 12px 0;
+  }
+  
+  .nav-section {
+    margin-bottom: 20px;
+  }
+  
+  .nav-header {
+    font-size: 9px;
+    color: #F7A500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 8px 12px;
+    border-left: 2px solid #F7A500;
+    background-color: #1A1D23;
+    margin-bottom: 4px;
+  }
+  
+  .nav-item {
+    padding: 8px 12px 8px 14px;
+    font-size: 10px;
+    color: #909090;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+  
+  .nav-item:hover {
+    background-color: #1A1D23;
+    border-left-color: #FF9500;
+    color: #D0D0D0;
+  }
+  
+  .nav-item.active {
+    background-color: #1A1D23;
+    border-left-color: #FF9500;
+    color: #FF9500;
+  }
+  
+  .filter-section {
+    padding: 0 12px;
+    margin-top: 8px;
+  }
+  
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 9px;
+    color: #707070;
+    text-transform: uppercase;
+  }
+  
+  .filter-item input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+    accent-color: #FF9500;
+    border: 1px solid #2A2D35;
+  }
+  
+  .agent-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 0 12px;
+    margin-top: 12px;
+  }
+  
+  .agent-node {
+    background-color: #0D0F14;
+    border: 1px solid #2A2D35;
+    padding: 8px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+  
+  .agent-node::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 4px;
+    height: 4px;
+    background-color: #3BAFDA;
+    border: 1px solid #3BAFDA;
+  }
+  
+  .agent-node:hover {
+    border-color: #FF9500;
+    background-color: #1A1D23;
+  }
+  
+  .agent-node.active::before {
+    background-color: #00D4AA;
+    animation: blink 1s ease-in-out infinite;
+  }
+  
+  .agent-code {
+    font-size: 11px;
+    color: #FF9500;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  
+  .agent-label {
+    font-size: 7px;
+    color: #606060;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+  
+  main {
+    display: flex;
+    flex-direction: column;
+    background-color: #0D0F14;
+    padding: 12px;
+    gap: 12px;
+    position: relative;
+  }
+  
+  main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(42, 45, 53, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42, 45, 53, 0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  #mapView {
+    flex-grow: 1;
+    background-color: #000;
+    border: 1px solid #2A2D35;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .tactical-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(255, 149, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 149, 0, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  
+  .map-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  
+  .map-title {
+    font-size: 18px;
+    color: #FF9500;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  
+  .map-subtitle {
+    font-size: 9px;
+    color: #606060;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .layer-controls {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: rgba(26, 29, 35, 0.95);
+    border: 1px solid #2A2D35;
+    padding: 10px;
+    width: 180px;
+    z-index: 10;
+  }
+  
+  .layer-controls-header {
+    font-size: 8px;
+    color: #F7A500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #2A2D35;
+  }
+  
+  .layer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 9px;
+    color: #909090;
+    border-bottom: 1px solid #1A1D23;
+  }
+  
+  .layer-row:last-child {
+    border-bottom: none;
+  }
+  
+  .toggle {
+    width: 28px;
+    height: 12px;
+    background-color: #2A2D35;
+    border: 1px solid #404040;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .toggle.active {
+    background-color: #FF9500;
+  }
+  
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #D0D0D0;
+    top: 1px;
+    left: 1px;
+    transition: transform 0.2s;
+  }
+  
+  .toggle.active::after {
+    transform: translateX(14px);
+    background-color: #000;
+  }
+  
+  .tactical-controls {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 10;
+  }
+  
+  .control-btn {
+    width: 32px;
+    height: 32px;
+    background-color: rgba(26, 29, 35, 0.95);
+    border: 1px solid #2A2D35;
+    color: #FF9500;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  
+  .control-btn:hover {
+    background-color: #FF9500;
+    color: #000;
+    border-color: #FF9500;
+  }
+  
+  .coord-display {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background-color: rgba(26, 29, 35, 0.95);
+    border: 1px solid #2A2D35;
+    padding: 6px 10px;
+    font-size: 9px;
+    color: #3BAFDA;
+    letter-spacing: 1px;
+  }
+  
+  .mini-tactical {
+    position: absolute;
+    bottom: 60px;
+    right: 12px;
+    width: 140px;
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0.95);
+    border: 1px solid #FF9500;
+    background-image: 
+      linear-gradient(#2A2D35 1px, transparent 1px),
+      linear-gradient(90deg, #2A2D35 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: relative;
+  }
+  
+  .mini-tactical::after {
+    content: 'TX GRID';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 7px;
+    color: #F7A500;
+    letter-spacing: 1px;
+  }
+  
+  .time-control {
+    background-color: #1A1D23;
+    border: 1px solid #2A2D35;
+    height: 44px;
+    display: grid;
+    grid-template-columns: 120px 1fr 100px;
+    align-items: center;
+    padding: 0 12px;
+    gap: 12px;
+  }
+  
+  .time-label {
+    font-size: 8px;
+    color: #F7A500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .time-slider {
+    width: 100%;
+    height: 4px;
+    -webkit-appearance: none;
+    background: #2A2D35;
+    outline: none;
+    border: 1px solid #404040;
+    position: relative;
+  }
+  
+  .time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #FF9500;
+    cursor: pointer;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+  
+  .time-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #FF9500;
+    cursor: pointer;
+    border: none;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+  
+  .time-value {
+    font-size: 11px;
+    color: #FF9500;
+    font-weight: 700;
+    text-align: right;
+    letter-spacing: 0.5px;
+  }
+  
+  aside {
+    background-color: #0D0F14;
+    border-left: 1px solid #2A2D35;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .data-block {
+    background-color: #0D0F14;
+    border: 1px solid #2A2D35;
+    border-left: 2px solid #3BAFDA;
+  }
+  
+  .data-block-header {
+    background-color: #1A1D23;
+    padding: 6px 8px;
+    border-bottom: 1px solid #2A2D35;
+    font-size: 8px;
+    color: #F7A500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  
+  .data-block-content {
+    padding: 10px 8px;
+  }
+  
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #1A1D23;
+  }
+  
+  .data-row:last-child {
+    border-bottom: none;
+  }
+  
+  .data-row-label {
+    font-size: 8px;
+    color: #707070;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .data-row-value {
+    font-size: 11px;
+    color: #FF9500;
+    font-weight: 700;
+  }
+  
+  .data-row-value.warning {
+    color: #F7A500;
+  }
+  
+  .data-row-value.critical {
+    color: #E23557;
+  }
+  
+  .data-row-value.success {
+    color: #00D4AA;
+  }
+  
+  .data-row-trend {
+    font-size: 7px;
+    color: #606060;
+    margin-top: 2px;
+  }
+  
+  .alert-feed {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  
+  .alert-entry {
+    background-color: #0D0F14;
+    border-left: 2px solid #E23557;
+    padding: 8px;
+    margin-bottom: 6px;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+  
+  .alert-entry.warning {
+    border-left-color: #F7A500;
+  }
+  
+  .alert-entry.info {
+    border-left-color: #3BAFDA;
+  }
+  
+  .alert-timestamp {
+    color: #606060;
+    font-size: 8px;
+    margin-bottom: 3px;
+    letter-spacing: 0.3px;
+  }
+  
+  .alert-text {
+    color: #D0D0D0;
+    margin-bottom: 3px;
+  }
+  
+  .alert-meta {
+    font-size: 7px;
+    color: #3BAFDA;
+    text-transform: uppercase;
+  }
+  
+  .agent-log-entry {
+    background-color: #0D0F14;
+    border-left: 2px solid #3BAFDA;
+    padding: 8px;
+    margin-bottom: 6px;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+  
+  .agent-id {
+    color: #3BAFDA;
+    font-size: 8px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .agent-message {
+    color: #909090;
+    font-size: 9px;
+  }
+  
+  .agent-timestamp {
+    color: #606060;
+    font-size: 7px;
+    margin-top: 3px;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #0D0F14;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #2A2D35;
+    border: 1px solid #404040;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF9500;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="system-id">GRIDGUARD AI</div>
+      <div class="status-block">
+        <div class="status-led"></div>
+        <span class="status-text">OPERATIONAL</span>
+      </div>
+    </div>
+    
+    <div class="header-center">
+      <div class="metric-unit">
+        <span class="metric-label">FREQUENCY</span>
+        <span class="metric-value" id="frequency">60.02 HZ</span>
+      </div>
+      <div class="metric-unit">
+        <span class="metric-label">LOAD</span>
+        <span class="metric-value">48,247 MW</span>
+      </div>
+      <div class="metric-unit warning">
+        <span class="metric-label">CAPACITY</span>
+        <span class="metric-value">72,500 MW</span>
+      </div>
+      <div class="metric-unit">
+        <span class="metric-label">UTILIZATION</span>
+        <span class="metric-value">66.5%</span>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <div class="alert-indicator">P1: 5 ALERTS</div>
+      <div class="operator-id">OPR: ADMIN-001</div>
+    </div>
+  </header>
+
+  <div id="container">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-header">OPERATIONS</div>
+        <div class="nav-item active">LIVE GRID VIEW</div>
+        <div class="nav-item" onclick="window.location.href='./analytics.html'">PREDICTIVE ANALYTICS</div>
+        <div class="nav-item" onclick="window.location.href='./agents.html'">AGENT STATUS</div>
+        <div class="nav-item" onclick="window.location.href='./historical.html'">HISTORICAL DATA</div>
+        <div class="nav-item" onclick="window.location.href='./scenario.html'">SCENARIO SIM</div>
+        <div class="nav-item" onclick="window.location.href='./reports.html'">REPORTS</div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-header">FILTERS</div>
+        <div class="filter-section">
+          <div class="filter-item">
+            <input type="checkbox" id="f1" checked>
+            <label for="f1">HOUSTON REG</label>
+          </div>
+          <div class="filter-item">
+            <input type="checkbox" id="f2" checked>
+            <label for="f2">DALLAS REG</label>
+          </div>
+          <div class="filter-item">
+            <input type="checkbox" id="f3" checked>
+            <label for="f3">SAN ANTONIO</label>
+          </div>
+          <div class="filter-item">
+            <input type="checkbox" id="f4" checked>
+            <label for="f4">AUSTIN REG</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-header">AGENT NETWORK</div>
+        <div class="agent-grid">
+          <div class="agent-node active">
+            <div class="agent-code">LF</div>
+            <div class="agent-label">LOAD<br>FORECAST</div>
+          </div>
+          <div class="agent-node active">
+            <div class="agent-code">WA</div>
+            <div class="agent-label">WEATHER<br>ANALYST</div>
+          </div>
+          <div class="agent-node active">
+            <div class="agent-code">GS</div>
+            <div class="agent-label">GRID<br>STABILIZER</div>
+          </div>
+          <div class="agent-node">
+            <div class="agent-code">AM</div>
+            <div class="agent-label">ASSET<br>MANAGER</div>
+          </div>
+          <div class="agent-node active">
+            <div class="agent-code">RE</div>
+            <div class="agent-label">RENEWABLE<br>ENERGY</div>
+          </div>
+          <div class="agent-node">
+            <div class="agent-code">DR</div>
+            <div class="agent-label">DEMAND<br>RESPONSE</div>
+          </div>
+          <div class="agent-node">
+            <div class="agent-code">HD</div>
+            <div class="agent-label">HISTORICAL<br>DATA</div>
+          </div>
+          <div class="agent-node">
+            <div class="agent-code">OP</div>
+            <div class="agent-label">OPTIMIZER</div>
+          </div>
+          <div class="agent-node active">
+            <div class="agent-code">RS</div>
+            <div class="agent-label">RISK<br>SURVEILL</div>
+          </div>
+          <div class="agent-node active">
+            <div class="agent-code">RC</div>
+            <div class="agent-label">RESOURCE<br>CONTROL</div>
+          </div>
+          <div class="agent-node">
+            <div class="agent-code">ER</div>
+            <div class="agent-label">EMERGENCY<br>RESPONSE</div>
+          </div>
+          <div class="agent-node active">
+            <div class="agent-code">CM</div>
+            <div class="agent-label">COMM<br>MANAGER</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <div id="mapView">
+        <div class="tactical-overlay"></div>
+        
+        <div class="map-center-text">
+          <div class="map-title">3D GEOSPATIAL GRID</div>
+          <div class="map-subtitle">CESIUMJS INTEGRATION LAYER</div>
+          <div class="map-subtitle" style="margin-top: 4px;">TEXAS POWER GRID TOPOLOGY</div>
+        </div>
+        
+        <div class="layer-controls">
+          <div class="layer-controls-header">LAYER CONTROLS</div>
+          <div class="layer-row">
+            <span>WEATHER OVERLAY</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="layer-row">
+            <span>DEMAND HEATMAP</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="layer-row">
+            <span>GENERATION SITES</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="layer-row">
+            <span>TRANSMISSION</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="layer-row">
+            <span>FAULT PREDICT</span>
+            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+          </div>
+        </div>
+        
+        <div class="tactical-controls">
+          <div class="control-btn" title="ZOOM IN">+</div>
+          <div class="control-btn" title="ZOOM OUT">-</div>
+          <div class="control-btn" title="PAN">◇</div>
+          <div class="control-btn" title="ROTATE">⟲</div>
+          <div class="control-btn" title="MEASURE">⊣</div>
+          <div class="control-btn" title="RESET">⌂</div>
+        </div>
+        
+        <div class="coord-display">
+          LAT: 31.9686°N | LON: -99.9018°W | ALT: 450M
+        </div>
+        
+        <div class="mini-tactical"></div>
+      </div>
+      
+      <div class="time-control">
+        <div class="time-label">PREDICTION HORIZON</div>
+        <input type="range" class="time-slider" min="0" max="24" value="0" step="1" oninput="updateTime(this.value)">
+        <div class="time-value" id="timeValue">T+00:00</div>
+      </div>
+    </main>
+
+    <aside>
+      <div class="data-block">
+        <div class="data-block-header">SYSTEM METRICS</div>
+        <div class="data-block-content">
+          <div class="data-row">
+            <div>
+              <div class="data-row-label">TOTAL CAPACITY</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="data-row-value">78,340 MW</div>
+              <div class="data-row-trend">▲ 2.3% 24H</div>
+            </div>
+          </div>
+          <div class="data-row">
+            <div>
+              <div class="data-row-label">AVAILABLE RESERVE</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="data-row-value warning">15.7%</div>
+              <div class="data-row-trend">▼ 0.8% 1H</div>
+            </div>
+          </div>
+          <div class="data-row">
+            <div>
+              <div class="data-row-label">RENEWABLE GEN</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="data-row-value">28.4%</div>
+              <div class="data-row-trend">▲ 4.2% 24H</div>
+            </div>
+          </div>
+          <div class="data-row">
+            <div>
+              <div class="data-row-label">SYSTEM FREQ</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="data-row-value success">60.02 HZ</div>
+              <div class="data-row-trend">● STABLE</div>
+            </div>
+          </div>
+          <div class="data-row">
+            <div>
+              <div class="data-row-label">ML ACCURACY</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="data-row-value">97.7%</div>
+              <div class="data-row-trend">LSTM-T MODEL</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="data-block" style="flex-grow: 1; display: flex; flex-direction: column;">
+        <div class="data-block-header">PREDICTIVE ALERTS</div>
+        <div class="alert-feed" style="padding: 8px;">
+          <div class="alert-entry">
+            <div class="alert-timestamp">2025-10-16 09:45:12 CDT | T+06:00</div>
+            <div class="alert-text">POTENTIAL OVERLOAD: DALLAS-NORTH SUBSTATION #2847</div>
+            <div class="alert-meta">CONFIDENCE: 87% | PRIORITY: P1</div>
+          </div>
+          <div class="alert-entry">
+            <div class="alert-timestamp">2025-10-16 15:45:00 CDT | T+12:00</div>
+            <div class="alert-text">TRANSFORMER MAINTENANCE REQUIRED: AUSTIN-CENTRAL #4192</div>
+            <div class="alert-meta">CONFIDENCE: 92% | PRIORITY: P2</div>
+          </div>
+          <div class="alert-entry warning">
+            <div class="alert-timestamp">2025-10-16 21:45:00 CDT | T+18:00</div>
+            <div class="alert-text">WIND GEN DROP PREDICTED: WEST-TX FARMS (15% REDUCTION)</div>
+            <div class="alert-meta">CONFIDENCE: 78% | PRIORITY: P2</div>
+          </div>
+          <div class="alert-entry warning">
+            <div class="alert-timestamp">2025-10-16 07:45:00 CDT | T+04:00</div>
+            <div class="alert-text">DEMAND SPIKE FORECASTED: HOUSTON METRO (+8.2% BASELINE)</div>
+            <div class="alert-meta">CONFIDENCE: 95% | PRIORITY: P1</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="data-block" style="flex-grow: 1; display: flex; flex-direction: column;">
+        <div class="data-block-header">AGENT ACTIVITY LOG</div>
+        <div class="alert-feed" style="padding: 8px;">
+          <div class="agent-log-entry">
+            <div class="agent-id">AGENT-WA-001</div>
+            <div class="agent-message">EXTREME HEAT ANOMALY DETECTED: HOUSTON REGION +4°C BASELINE</div>
+            <div class="agent-timestamp">2025-10-16 03:43:08 CDT</div>
+          </div>
+          <div class="agent-log-entry">
+            <div class="agent-id">AGENT-LF-CENTRAL</div>
+            <div class="agent-message">24H LOAD PREDICTION MODEL UPDATED: CONFIDENCE 94.2%</div>
+            <div class="agent-timestamp">2025-10-16 03:40:15 CDT</div>
+          </div>
+          <div class="agent-log-entry">
+            <div class="agent-id">AGENT-GS-NORTH</div>
+            <div class="agent-message">COORDINATING W/ TRANSMISSION AGENT FOR LOAD BALANCE</div>
+            <div class="agent-timestamp">2025-10-16 03:37:42 CDT</div>
+          </div>
+          <div class="agent-log-entry">
+            <div class="agent-id">AGENT-RS-006</div>
+            <div class="agent-message">VOLTAGE FLUCTUATION DETECTED: SUBSTATION #2847 (1.2% VARIANCE)</div>
+            <div class="agent-timestamp">2025-10-16 03:33:19 CDT</div>
+          </div>
+          <div class="agent-log-entry">
+            <div class="agent-id">AGENT-RE-WIND</div>
+            <div class="agent-message">WIND SPEED DROPPING BELOW THRESHOLD: ALERTING CAPACITY PLANNERS</div>
+            <div class="agent-timestamp">2025-10-16 03:30:51 CDT</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function updateTime(value) {
+      const display = document.getElementById('timeValue');
+      const hours = parseInt(value);
+      display.textContent = 'T+' + hours.toString().padStart(2, '0') + ':00';
+    }
+    
+    setInterval(() => {
+      const freqElement = document.getElementById('frequency');
+      const currentFreq = parseFloat(freqElement.textContent);
+      const newFreq = (currentFreq + (Math.random() - 0.5) * 0.03).toFixed(2);
+      freqElement.textContent = newFreq + ' HZ';
+    }, 2000);
+    
+    // Chatbot functionality
+    function toggleChat() {
+      const chatWindow = document.getElementById('chatWindow');
+      chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+    }
+    
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const messages = document.getElementById('chatMessages');
+      if (input.value.trim() === '') return;
+      
+      const userMsg = document.createElement('div');
+      userMsg.className = 'chat-message user';
+      userMsg.innerHTML = '<div class="chat-bubble">' + input.value + '</div>';
+      messages.appendChild(userMsg);
+      
+      const userText = input.value;
+      input.value = '';
+      
+      setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'chat-message ai';
+        let response = 'PROCESSING QUERY...';
+        
+        if (userText.toLowerCase().includes('status') || userText.toLowerCase().includes('grid')) {
+          response = 'GRID STATUS: STABLE | FREQUENCY: 60.01 HZ | LOAD: 52,847 MW | ALL AGENTS OPERATIONAL';
+        } else if (userText.toLowerCase().includes('weather') || userText.toLowerCase().includes('forecast')) {
+          response = 'WEATHER FORECAST: TEMPERATURE RISING TO 98°F | DEMAND INCREASE PREDICTED +8.4% | WIND GENERATION NORMAL';
+        } else if (userText.toLowerCase().includes('agent')) {
+          response = 'ALL 12 AI AGENTS ACTIVE | AVERAGE ACCURACY: 94.3% | PROCESSING 847 TASKS/MIN';
+        } else if (userText.toLowerCase().includes('alert')) {
+          response = 'ACTIVE ALERTS: 2 WARNINGS | THERMAL SPIKE IN ZONE 3 | WIND DROP DETECTED';
+        }
+        
+        aiMsg.innerHTML = '<div class="chat-bubble">' + response + '</div>';
+        messages.appendChild(aiMsg);
+        messages.scrollTop = messages.scrollHeight;
+      }, 500);
+      
+      messages.scrollTop = messages.scrollHeight;
+    }
+    
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && document.activeElement.id === 'chatInput') {
+        sendMessage();
+      }
+    });
+  </script>
+  
+  <!-- Chatbot Interface -->
+  <div id="chatButton" onclick="toggleChat()" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: #FF9500; border: 2px solid #FF9500; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #000; z-index: 1000;">AI</div>
+  
+  <div id="chatWindow" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 380px; height: 520px; background-color: #0D0F14; border: 2px solid #FF9500; border-left: 4px solid #FF9500; flex-direction: column; z-index: 1000; font-family: 'IBM Plex Mono', monospace;">
+    <div style="background-color: #1A1D23; padding: 12px; border-bottom: 1px solid #FF9500; display: flex; justify-content: space-between; align-items: center;">
+      <div style="color: #FF9500; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">GRIDGUARD AI ASSISTANT</div>
+      <div onclick="toggleChat()" style="color: #FF9500; cursor: pointer; font-size: 14px; font-weight: 700;">×</div>
+    </div>
+    
+    <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background-color: #0D0F14;">
+      <div class="chat-message ai">
+        <div class="chat-bubble" style="background-color: #1A1D23; border-left: 2px solid #3BAFDA; padding: 8px 10px; font-size: 10px; color: #D0D0D0; max-width: 85%;">GRIDGUARD AI READY | ASK ABOUT GRID STATUS, FORECASTS, AGENTS, OR ALERTS</div>
+      </div>
+    </div>
+    
+    <div style="background-color: #1A1D23; padding: 12px; border-top: 1px solid #2A2D35; display: flex; gap: 8px;">
+      <input type="text" id="chatInput" placeholder="TYPE COMMAND..." style="flex: 1; background-color: #0D0F14; border: 1px solid #2A2D35; padding: 8px; font-size: 10px; color: #D0D0D0; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase;">
+      <button onclick="sendMessage()" style="background-color: #FF9500; border: 1px solid #FF9500; padding: 8px 16px; font-size: 9px; color: #000; font-weight: 700; cursor: pointer; text-transform: uppercase;">SEND</button>
+    </div>
+  </div>
+  
+  <style>
+    .chat-message { display: flex; }
+    .chat-message.user { justify-content: flex-end; }
+    .chat-message.ai { justify-content: flex-start; }
+    .chat-message.user .chat-bubble { background-color: #FF9500; color: #000; border-left: 2px solid #F7A500; padding: 8px 10px; font-size: 10px; max-width: 85%; }
+    .chat-message.ai .chat-bubble { background-color: #1A1D23; border-left: 2px solid #3BAFDA; padding: 8px 10px; font-size: 10px; color: #D0D0D0; max-width: 85%; }
+    #chatMessages::-webkit-scrollbar { width: 4px; }
+    #chatMessages::-webkit-scrollbar-track { background: #0D0F14; }
+    #chatMessages::-webkit-scrollbar-thumb { background: #2A2D35; }
+    #chatMessages::-webkit-scrollbar-thumb:hover { background: #FF9500; }
+  </style>
+</body>
+</html>

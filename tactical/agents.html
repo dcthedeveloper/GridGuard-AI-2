@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIDGUARD AI - AGENT STATUS</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Mono', monospace; background-color: #0D0F14; color: #D0D0D0; font-size: 11px; line-height: 1.4; overflow: hidden; }
+  button, input, div, section { border-radius: 0 !important; }
+  
+  header { background-color: #1A1D23; height: 44px; border-bottom: 1px solid #FF9500; display: grid; grid-template-columns: 280px 1fr 320px; align-items: center; padding: 0 12px; position: relative; }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #FF9500 0%, transparent 100%); opacity: 0.3; }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .system-id { color: #FF9500; font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+  .status-block { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background-color: #1A1D23; border: 1px solid #2A2D35; clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px); }
+  .status-led { width: 6px; height: 6px; background-color: #00D4AA; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .status-text { font-size: 9px; color: #00D4AA; text-transform: uppercase; letter-spacing: 1px; }
+  .header-center { padding: 0 20px; text-align: center; font-size: 13px; color: #F7A500; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+  .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+  .back-btn { background-color: #1A1D23; border: 1px solid #FF9500; padding: 4px 10px; font-size: 9px; color: #FF9500; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+  .back-btn:hover { background-color: #FF9500; color: #000; }
+  
+  #container { display: grid; grid-template-columns: 200px 1fr; height: calc(100vh - 44px); background-color: #0D0F14; }
+  
+  nav { background-color: #0D0F14; border-right: 1px solid #2A2D35; overflow-y: auto; padding: 12px 0; }
+  .nav-section { margin-bottom: 20px; }
+  .nav-header { font-size: 9px; color: #F7A500; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px 12px; border-left: 2px solid #F7A500; background-color: #1A1D23; margin-bottom: 4px; }
+  .nav-item { padding: 8px 12px 8px 14px; font-size: 10px; color: #909090; text-transform: uppercase; cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s; letter-spacing: 0.5px; }
+  .nav-item:hover { background-color: #1A1D23; border-left-color: #FF9500; color: #D0D0D0; }
+  .nav-item.active { background-color: #1A1D23; border-left-color: #FF9500; color: #FF9500; }
+  
+  main { display: flex; flex-direction: column; padding: 12px; gap: 12px; overflow-y: auto; }
+  
+  .agent-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .agent-card { background-color: #0D0F14; border: 1px solid #2A2D35; border-left: 2px solid #3BAFDA; padding: 12px; cursor: pointer; transition: all 0.2s; position: relative; }
+  .agent-card::before { content: ''; position: absolute; top: -3px; right: -3px; width: 6px; height: 6px; background-color: #00D4AA; border: 1px solid #00D4AA; animation: blink 1s ease-in-out infinite; }
+  .agent-card:hover { border-color: #FF9500; background-color: #1A1D23; }
+  .agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .agent-code { font-size: 16px; color: #FF9500; font-weight: 700; }
+  .agent-status { font-size: 7px; color: #00D4AA; text-transform: uppercase; background-color: rgba(0, 212, 170, 0.1); padding: 2px 6px; border: 1px solid #00D4AA; }
+  .agent-name { font-size: 10px; color: #D0D0D0; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  .agent-desc { font-size: 8px; color: #707070; margin-bottom: 10px; line-height: 1.3; }
+  .agent-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 10px; border-top: 1px solid #2A2D35; }
+  .metric { text-align: center; }
+  .metric-value { font-size: 14px; color: #FF9500; font-weight: 700; }
+  .metric-label { font-size: 7px; color: #707070; text-transform: uppercase; margin-top: 2px; }
+  
+  .data-block { background-color: #0D0F14; border: 1px solid #2A2D35; border-left: 2px solid #E23557; }
+  .data-block-header { background-color: #1A1D23; padding: 6px 8px; border-bottom: 1px solid #2A2D35; font-size: 8px; color: #F7A500; text-transform: uppercase; letter-spacing: 1.5px; }
+  .data-block-content { padding: 10px 8px; }
+  
+  .comm-entry { background-color: #1A1D23; border-left: 2px solid #3BAFDA; padding: 10px; margin-bottom: 8px; font-size: 9px; display: flex; gap: 12px; align-items: center; }
+  .comm-from { font-size: 11px; color: #FF9500; font-weight: 700; min-width: 30px; }
+  .comm-arrow { color: #3BAFDA; font-size: 14px; }
+  .comm-to { font-size: 11px; color: #FF9500; font-weight: 700; min-width: 30px; }
+  .comm-message { flex: 1; color: #D0D0D0; }
+  .comm-time { font-size: 7px; color: #606060; min-width: 40px; text-align: right; }
+  
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0D0F14; }
+  ::-webkit-scrollbar-thumb { background: #2A2D35; border: 1px solid #404040; }
+  ::-webkit-scrollbar-thumb:hover { background: #FF9500; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="system-id">GRIDGUARD AI</div>
+      <div class="status-block">
+        <div class="status-led"></div>
+        <span class="status-text">12 AGENTS ONLINE</span>
+      </div>
+    </div>
+    <div class="header-center">AGENT STATUS MONITOR</div>
+    <div class="header-right">
+      <a href="./index.html" class="back-btn">← BACK TO GRID VIEW</a>
+    </div>
+  </header>
+
+  <div id="container">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-header">OPERATIONS</div>
+        <div class="nav-item" onclick="window.location.href='./index.html'">LIVE GRID VIEW</div>
+        <div class="nav-item" onclick="window.location.href='./analytics.html'">PREDICTIVE ANALYTICS</div>
+        <div class="nav-item active">AGENT STATUS</div>
+        <div class="nav-item" onclick="window.location.href='./historical.html'">HISTORICAL DATA</div>
+        <div class="nav-item" onclick="window.location.href='./scenario.html'">SCENARIO SIM</div>
+        <div class="nav-item" onclick="window.location.href='./reports.html'">REPORTS</div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-header">AGENT FILTERS</div>
+        <div class="nav-item active">ALL AGENTS</div>
+        <div class="nav-item">FORECASTERS</div>
+        <div class="nav-item">CONTROLLERS</div>
+        <div class="nav-item">ANALYZERS</div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-header">VIEW MODE</div>
+        <div class="nav-item active">GRID VIEW</div>
+        <div class="nav-item">LIST VIEW</div>
+        <div class="nav-item">NETWORK GRAPH</div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="agent-grid-container" id="agentGrid"></div>
+      
+      <div class="data-block">
+        <div class="data-block-header">AGENT-TO-AGENT COMMUNICATION</div>
+        <div class="data-block-content" id="commFeed"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const agents = [
+      { code: 'LF', name: 'Load Forecaster', desc: 'Predicts electricity demand using ML models', tasks: 247, accuracy: 98 },
+      { code: 'WA', name: 'Weather Analyst', desc: 'Monitors weather conditions & renewables impact', tasks: 412, accuracy: 96 },
+      { code: 'GS', name: 'Grid Stabilizer', desc: 'Balances supply/demand in real-time', tasks: 892, accuracy: 99 },
+      { code: 'AM', name: 'Asset Manager', desc: 'Tracks power plants & equipment status', tasks: 156, accuracy: 97 },
+      { code: 'RE', name: 'Renewable Energy', desc: 'Optimizes solar & wind generation', tasks: 324, accuracy: 94 },
+      { code: 'DR', name: 'Demand Response', desc: 'Coordinates load shedding programs', tasks: 89, accuracy: 95 },
+      { code: 'HD', name: 'Historical Data', desc: 'Provides historical patterns & insights', tasks: 567, accuracy: 99 },
+      { code: 'OP', name: 'Optimizer', desc: 'Finds optimal resource allocation', tasks: 203, accuracy: 96 },
+      { code: 'RS', name: 'Risk Surveillance', desc: 'Detects threats & anomalies', tasks: 438, accuracy: 98 },
+      { code: 'RC', name: 'Resource Controller', desc: 'Manages energy storage & reserves', tasks: 176, accuracy: 97 },
+      { code: 'ER', name: 'Emergency Response', desc: 'Handles grid emergencies & outages', tasks: 12, accuracy: 100 },
+      { code: 'CM', name: 'Comm Manager', desc: 'Coordinates all agent communications', tasks: 1243, accuracy: 99 }
+    ];
+    
+    const commMessages = [
+      { from: 'WA', to: 'LF', message: 'COLD FRONT APPROACHING, EXPECT 8% DEMAND INCREASE', time: '2S AGO' },
+      { from: 'LF', to: 'GS', message: 'FORECASTING 52,430 MW PEAK AT 7:00 PM', time: '5S AGO' },
+      { from: 'RS', to: 'ER', message: 'TRANSFORMER TEMPERATURE ABNORMAL IN REGION 3', time: '12S AGO' },
+      { from: 'RE', to: 'OP', message: 'WIND GENERATION AT 87% CAPACITY, OPTIMIZING DISPATCH', time: '18S AGO' },
+      { from: 'OP', to: 'RC', message: 'RECOMMEND DISCHARGING 500 MWH FROM BATTERY STORAGE', time: '25S AGO' },
+      { from: 'AM', to: 'GS', message: 'PLANT #14 MAINTENANCE COMPLETE, ONLINE IN 5 MIN', time: '31S AGO' }
+    ];
+    
+    const agentGrid = document.getElementById('agentGrid');
+    agents.forEach(agent => {
+      const card = document.createElement('div');
+      card.className = 'agent-card';
+      card.innerHTML = `
+        <div class="agent-header">
+          <div class="agent-code">${agent.code}</div>
+          <div class="agent-status">ONLINE</div>
+        </div>
+        <div class="agent-name">${agent.name}</div>
+        <div class="agent-desc">${agent.desc}</div>
+        <div class="agent-metrics">
+          <div class="metric">
+            <div class="metric-value">${agent.tasks}</div>
+            <div class="metric-label">TASKS</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value">${agent.accuracy}%</div>
+            <div class="metric-label">ACCURACY</div>
+          </div>
+        </div>
+      `;
+      agentGrid.appendChild(card);
+    });
+    
+    const commFeed = document.getElementById('commFeed');
+    commMessages.forEach(msg => {
+      const entry = document.createElement('div');
+      entry.className = 'comm-entry';
+      entry.innerHTML = `
+        <div class="comm-from">${msg.from}</div>
+        <div class="comm-arrow">→</div>
+        <div class="comm-to">${msg.to}</div>
+        <div class="comm-message">${msg.message}</div>
+        <div class="comm-time">${msg.time}</div>
+      `;
+      commFeed.appendChild(entry);
+    });
+  </script>
+</body>
+</html>

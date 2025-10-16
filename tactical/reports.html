@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIDGUARD AI - REPORTS & EXPORTS</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Mono', monospace; background-color: #0D0F14; color: #D0D0D0; font-size: 11px; line-height: 1.4; overflow: hidden; }
+  button, input, div, section { border-radius: 0 !important; }
+  
+  header { background-color: #1A1D23; height: 44px; border-bottom: 1px solid #FF9500; display: grid; grid-template-columns: 280px 1fr 320px; align-items: center; padding: 0 12px; position: relative; }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #FF9500 0%, transparent 100%); opacity: 0.3; }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .system-id { color: #FF9500; font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+  .status-block { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background-color: #1A1D23; border: 1px solid #2A2D35; clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px); }
+  .status-led { width: 6px; height: 6px; background-color: #00D4AA; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .status-text { font-size: 9px; color: #00D4AA; text-transform: uppercase; letter-spacing: 1px; }
+  .header-center { padding: 0 20px; text-align: center; font-size: 13px; color: #F7A500; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; }
+  .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+  .back-btn { background-color: #1A1D23; border: 1px solid #FF9500; padding: 4px 10px; font-size: 9px; color: #FF9500; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+  .back-btn:hover { background-color: #FF9500; color: #000; }
+  
+  #container { display: grid; grid-template-columns: 200px 1fr 280px; height: calc(100vh - 44px); background-color: #0D0F14; }
+  
+  nav { background-color: #0D0F14; border-right: 1px solid #2A2D35; overflow-y: auto; padding: 12px 0; }
+  .nav-section { margin-bottom: 20px; }
+  .nav-header { font-size: 9px; color: #F7A500; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px 12px; border-left: 2px solid #F7A500; background-color: #1A1D23; margin-bottom: 4px; }
+  .nav-item { padding: 8px 12px 8px 14px; font-size: 10px; color: #909090; text-transform: uppercase; cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s; letter-spacing: 0.5px; }
+  .nav-item:hover { background-color: #1A1D23; border-left-color: #FF9500; color: #D0D0D0; }
+  .nav-item.active { background-color: #1A1D23; border-left-color: #FF9500; color: #FF9500; }
+  
+  main { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; gap: 12px; padding: 12px; overflow-y: auto; }
+  
+  .data-block { background-color: #0D0F14; border: 1px solid #2A2D35; border-left: 2px solid #3BAFDA; }
+  .data-block.full-width { grid-column: 1 / 3; }
+  .data-block-header { background-color: #1A1D23; padding: 6px 8px; border-bottom: 1px solid #2A2D35; font-size: 8px; color: #F7A500; text-transform: uppercase; letter-spacing: 1.5px; }
+  .data-block-content { padding: 12px 8px; }
+  
+  .report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .report-card { background-color: #1A1D23; border: 1px solid #2A2D35; padding: 12px; cursor: pointer; transition: all 0.2s; }
+  .report-card:hover { border-color: #FF9500; background-color: #0D0F14; }
+  .report-icon { font-size: 10px; color: #707070; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+  .report-title { font-size: 10px; color: #FF9500; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+  .report-desc { font-size: 8px; color: #707070; margin-bottom: 8px; }
+  .download-btn { background-color: transparent; border: 1px solid #FF9500; padding: 6px 12px; font-size: 8px; color: #FF9500; text-transform: uppercase; cursor: pointer; width: 100%; transition: all 0.2s; }
+  .download-btn:hover { background-color: #FF9500; color: #000; }
+  
+  .export-form { display: flex; flex-direction: column; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 8px; color: #F7A500; text-transform: uppercase; }
+  .form-select, .form-input { background-color: #1A1D23; border: 1px solid #2A2D35; padding: 8px; font-size: 10px; color: #D0D0D0; font-family: 'IBM Plex Mono', monospace; }
+  .form-select:focus, .form-input:focus { outline: none; border-color: #FF9500; }
+  .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+  .checkbox-item { display: flex; align-items: center; gap: 8px; }
+  .checkbox-item input { width: 14px; height: 14px; }
+  .checkbox-item label { font-size: 9px; color: #D0D0D0; }
+  .export-btn { background-color: #FF9500; border: 1px solid #FF9500; padding: 10px; font-size: 10px; color: #000; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .export-btn:hover { background-color: #000; color: #FF9500; }
+  
+  .schedule-item { background-color: #1A1D23; border-left: 2px solid #3BAFDA; padding: 10px; margin-bottom: 8px; }
+  .schedule-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .schedule-name { font-size: 10px; color: #FF9500; font-weight: 700; text-transform: uppercase; }
+  .schedule-status { font-size: 8px; color: #00D4AA; text-transform: uppercase; }
+  .schedule-details { font-size: 8px; color: #707070; }
+  .schedule-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .schedule-btn { background-color: transparent; border: 1px solid #FF9500; padding: 4px 8px; font-size: 7px; color: #FF9500; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .schedule-btn:hover { background-color: #FF9500; color: #000; }
+  
+  aside { background-color: #0D0F14; border-left: 1px solid #2A2D35; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+  
+  .history-entry { background-color: #1A1D23; border-left: 2px solid #00D4AA; padding: 10px; margin-bottom: 8px; font-size: 9px; }
+  .history-time { font-size: 8px; color: #FF9500; text-transform: uppercase; margin-bottom: 4px; }
+  .history-text { color: #D0D0D0; margin-bottom: 4px; }
+  .history-size { font-size: 7px; color: #707070; }
+  
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0D0F14; }
+  ::-webkit-scrollbar-thumb { background: #2A2D35; border: 1px solid #404040; }
+  ::-webkit-scrollbar-thumb:hover { background: #FF9500; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <div class="system-id">GRIDGUARD AI</div>
+      <div class="status-block">
+        <div class="status-led"></div>
+        <span class="status-text">EXPORT READY</span>
+      </div>
+    </div>
+    <div class="header-center">REPORTS & EXPORTS</div>
+    <div class="header-right">
+      <a href="./index.html" class="back-btn">← BACK TO GRID VIEW</a>
+    </div>
+  </header>
+
+  <div id="container">
+    <nav>
+      <div class="nav-section">
+        <div class="nav-header">OPERATIONS</div>
+        <div class="nav-item" onclick="window.location.href='./index.html'">LIVE GRID VIEW</div>
+        <div class="nav-item" onclick="window.location.href='./analytics.html'">PREDICTIVE ANALYTICS</div>
+        <div class="nav-item" onclick="window.location.href='./agents.html'">AGENT STATUS</div>
+        <div class="nav-item" onclick="window.location.href='./historical.html'">HISTORICAL DATA</div>
+        <div class="nav-item" onclick="window.location.href='./scenario.html'">SCENARIO SIM</div>
+        <div class="nav-item active">REPORTS</div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-header">EXPORT TYPES</div>
+        <div class="nav-item active">STANDARD REPORTS</div>
+        <div class="nav-item">CUSTOM EXPORTS</div>
+        <div class="nav-item">SCHEDULED REPORTS</div>
+        <div class="nav-item">DATA ARCHIVES</div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="data-block full-width">
+        <div class="data-block-header">STANDARD REPORTS</div>
+        <div class="data-block-content">
+          <div class="report-grid">
+            <div class="report-card">
+              <div class="report-icon">[SUMMARY]</div>
+              <div class="report-title">DAILY SUMMARY</div>
+              <div class="report-desc">24-HOUR GRID PERFORMANCE OVERVIEW</div>
+              <button class="download-btn">DOWNLOAD PDF</button>
+            </div>
+            <div class="report-card">
+              <div class="report-icon">[FORECAST]</div>
+              <div class="report-title">WEEKLY FORECAST</div>
+              <div class="report-desc">7-DAY PREDICTIVE ANALYSIS</div>
+              <button class="download-btn">DOWNLOAD PDF</button>
+            </div>
+            <div class="report-card">
+              <div class="report-icon">[AGENTS]</div>
+              <div class="report-title">AGENT PERFORMANCE</div>
+              <div class="report-desc">AI AGENT METRICS & ACCURACY</div>
+              <button class="download-btn">DOWNLOAD PDF</button>
+            </div>
+            <div class="report-card">
+              <div class="report-icon">[ALERTS]</div>
+              <div class="report-title">INCIDENT LOG</div>
+              <div class="report-desc">ALERTS & CRITICAL EVENTS</div>
+              <button class="download-btn">DOWNLOAD PDF</button>
+            </div>
+            <div class="report-card">
+              <div class="report-icon">[DEMAND]</div>
+              <div class="report-title">DEMAND ANALYSIS</div>
+              <div class="report-desc">LOAD PATTERNS & TRENDS</div>
+              <button class="download-btn">DOWNLOAD PDF</button>
+            </div>
+            <div class="report-card">
+              <div class="report-icon">[COMPLIANCE]</div>
+              <div class="report-title">COMPLIANCE REPORT</div>
+              <div class="report-desc">REGULATORY METRICS & STANDARDS</div>
+              <button class="download-btn">DOWNLOAD PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="data-block">
+        <div class="data-block-header">CUSTOM DATA EXPORT</div>
+        <div class="data-block-content">
+          <form class="export-form">
+            <div class="form-group">
+              <label class="form-label">DATE RANGE</label>
+              <select class="form-select">
+                <option>LAST 24 HOURS</option>
+                <option>LAST 7 DAYS</option>
+                <option>LAST 30 DAYS</option>
+                <option>CUSTOM RANGE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">DATA SOURCES</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="grid" checked>
+                  <label for="grid">GRID METRICS</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="weather" checked>
+                  <label for="weather">WEATHER DATA</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="agents">
+                  <label for="agents">AGENT LOGS</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="alerts">
+                  <label for="alerts">ALERTS</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">EXPORT FORMAT</label>
+              <select class="form-select">
+                <option>CSV</option>
+                <option>JSON</option>
+                <option>XLSX</option>
+                <option>PDF</option>
+              </select>
+            </div>
+            <button type="button" class="export-btn">GENERATE EXPORT</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="data-block">
+        <div class="data-block-header">SCHEDULED REPORTS</div>
+        <div class="data-block-content">
+          <div class="schedule-item">
+            <div class="schedule-header">
+              <div class="schedule-name">DAILY GRID SUMMARY</div>
+              <div class="schedule-status">ACTIVE</div>
+            </div>
+            <div class="schedule-details">EVERY DAY AT 06:00 | PDF | EMAIL</div>
+            <div class="schedule-actions">
+              <button class="schedule-btn">EDIT</button>
+              <button class="schedule-btn">PAUSE</button>
+              <button class="schedule-btn">DELETE</button>
+            </div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-header">
+              <div class="schedule-name">WEEKLY FORECAST</div>
+              <div class="schedule-status">ACTIVE</div>
+            </div>
+            <div class="schedule-details">MONDAY AT 08:00 | PDF | EMAIL</div>
+            <div class="schedule-actions">
+              <button class="schedule-btn">EDIT</button>
+              <button class="schedule-btn">PAUSE</button>
+              <button class="schedule-btn">DELETE</button>
+            </div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-header">
+              <div class="schedule-name">MONTHLY COMPLIANCE</div>
+              <div class="schedule-status">ACTIVE</div>
+            </div>
+            <div class="schedule-details">1ST OF MONTH | PDF | EMAIL</div>
+            <div class="schedule-actions">
+              <button class="schedule-btn">EDIT</button>
+              <button class="schedule-btn">PAUSE</button>
+              <button class="schedule-btn">DELETE</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside>
+      <div class="data-block">
+        <div class="data-block-header">EXPORT HISTORY</div>
+        <div class="data-block-content">
+          <div class="history-entry">
+            <div class="history-time">2025-01-15 14:23</div>
+            <div class="history-text">DAILY SUMMARY REPORT GENERATED</div>
+            <div class="history-size">FILE: GRID_SUMMARY_20250115.PDF | 2.3 MB</div>
+          </div>
+          <div class="history-entry">
+            <div class="history-time">2025-01-15 08:15</div>
+            <div class="history-text">WEEKLY FORECAST EXPORTED</div>
+            <div class="history-size">FILE: FORECAST_WEEK_02.PDF | 4.1 MB</div>
+          </div>
+          <div class="history-entry">
+            <div class="history-time">2025-01-14 18:45</div>
+            <div class="history-text">CUSTOM DATA EXPORT (CSV)</div>
+            <div class="history-size">FILE: GRID_DATA_20250114.CSV | 8.7 MB</div>
+          </div>
+          <div class="history-entry">
+            <div class="history-time">2025-01-14 14:20</div>
+            <div class="history-text">AGENT PERFORMANCE REPORT</div>
+            <div class="history-size">FILE: AGENTS_20250114.PDF | 1.9 MB</div>
+          </div>
+          <div class="history-entry">
+            <div class="history-time">2025-01-13 06:00</div>
+            <div class="history-text">DAILY SUMMARY REPORT GENERATED</div>
+            <div class="history-size">FILE: GRID_SUMMARY_20250113.PDF | 2.1 MB</div>
+          </div>
+          <div class="history-entry">
+            <div class="history-time">2025-01-12 16:30</div>
+            <div class="history-text">COMPLIANCE REPORT EXPORTED</div>
+            <div class="history-size">FILE: COMPLIANCE_Q1_2025.PDF | 6.2 MB</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>
