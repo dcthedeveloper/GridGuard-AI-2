@@ -13,21 +13,28 @@
         }
 
         :root {
-            /* Superior Color Palette - High Contrast Military Grade */
-            --bg-primary: #000000;
-            --bg-secondary: #0a0e17;
-            --bg-tertiary: #111827;
+            /* Sophisticated Dark Theme - Professional Dashboard */
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --bg-card: #1e1e1e;
             
-            /* Accent Colors - Strategic Use Only */
-            --accent-primary: #3B82F6;      /* Blue - Primary actions */
-            --accent-secondary: #06B6D4;    /* Cyan - Secondary emphasis */
-            --accent-tertiary: #8B5CF6;     /* Purple - Tertiary */
+            /* Accent Colors - Modern Gradient Palette */
+            --accent-primary: #00d4ff;      /* Bright Cyan - Primary actions */
+            --accent-secondary: #0088ff;    /* Blue - Secondary emphasis */
+            --accent-tertiary: #ff6b35;     /* Orange - Tertiary alerts */
             
-            /* Status Colors - Clear Communication */
-            --status-safe: #10B981;         /* Green */
-            --status-caution: #F59E0B;      /* Amber */
-            --status-critical: #EF4444;     /* Red */
-            --status-info: #3B82F6;         /* Blue */
+            /* Status Colors - Clear Hierarchy */
+            --status-normal: #00ff88;       /* Bright Green - Normal/Active */
+            --status-warning: #ffaa00;      /* Amber - Warning */
+            --status-critical: #ff4444;     /* Red - Critical */
+            --status-info: #00d4ff;         /* Cyan - Information */
+            --status-idle: #666666;         /* Gray - Idle/Inactive */
+            
+            /* Chart Gradient Colors */
+            --gradient-start: #00d4ff;      /* Cyan start */
+            --gradient-mid: #0088ff;        /* Blue middle */
+            --gradient-end: #ff6b35;        /* Orange end */
             
             /* Text Hierarchy */
             --text-primary: #FFFFFF;
@@ -103,8 +110,8 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--status-safe);
-            box-shadow: 0 0 12px var(--status-safe);
+            background: var(--status-normal);
+            box-shadow: 0 0 12px var(--status-normal);
             animation: pulse 2s infinite;
         }
 
@@ -237,8 +244,17 @@
         }
 
         .agent-badge.active {
-            border-color: var(--status-safe);
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+            border-color: var(--status-normal);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .agent-badge.idle {
+            border-color: var(--status-idle);
+            opacity: 0.6;
+        }
+
+        .agent-badge.idle .agent-abbr {
+            color: var(--status-idle);
         }
 
         .agent-abbr {
@@ -284,15 +300,30 @@
         }
 
         .a2a-message.tool-call {
-            border-left-color: var(--accent-secondary);
+            border-left-color: var(--accent-primary);
         }
 
         .a2a-message.tool-response {
-            border-left-color: var(--status-safe);
+            border-left-color: var(--status-normal);
         }
 
         .a2a-message.alert {
             border-left-color: var(--status-critical);
+        }
+
+        .a2a-message.p1-critical {
+            border-left-color: var(--status-critical);
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .a2a-message.p1-high {
+            border-left-color: var(--accent-tertiary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .a2a-message.p2-maintenance {
+            border-left-color: var(--status-info);
+            background: rgba(0, 212, 255, 0.1);
         }
 
         .a2a-header {
@@ -421,7 +452,7 @@
         }
 
         .prediction-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
             border: 1px solid var(--accent-primary);
             border-radius: 6px;
             padding: var(--space-4);
@@ -453,7 +484,7 @@
 
         .confidence-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--status-safe) 0%, var(--status-info) 100%);
+            background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
             border-radius: 3px;
         }
 
@@ -639,7 +670,7 @@
 
         .quick-action {
             padding: var(--space-1) var(--space-3);
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(0, 212, 255, 0.1);
             border: 1px solid var(--accent-primary);
             border-radius: 12px;
             font-size: var(--text-xs);
@@ -648,7 +679,7 @@
         }
 
         .quick-action:hover {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(0, 212, 255, 0.2);
             transform: translateY(-1px);
         }
 
@@ -741,11 +772,11 @@
             <div class="map-overlay">
                 <div class="panel-header" style="margin-bottom: var(--space-3);">Region Status</div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: var(--status-safe);"></div>
+                    <div class="legend-color" style="background: var(--status-normal);"></div>
                     <span>Normal (&lt;75%)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: var(--status-caution);"></div>
+                    <div class="legend-color" style="background: var(--status-warning);"></div>
                     <span>Alert (75-90%)</span>
                 </div>
                 <div class="legend-item">

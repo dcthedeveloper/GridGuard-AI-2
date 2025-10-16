@@ -14,8 +14,8 @@
   
   body {
     font-family: 'IBM Plex Mono', monospace;
-    background-color: #0D0F14;
-    color: #D0D0D0;
+    background-color: #0a0a0a;
+    color: #ffffff;
     font-size: 11px;
     line-height: 1.4;
     overflow: hidden;
@@ -26,9 +26,9 @@
   }
   
   header {
-    background-color: #1A1D23;
+    background-color: #1a1a1a;
     height: 44px;
-    border-bottom: 1px solid #FF9500;
+    border-bottom: 1px solid #00d4ff;
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     align-items: center;
@@ -43,7 +43,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, #FF9500 0%, transparent 100%);
+    background: linear-gradient(90deg, #00d4ff 0%, transparent 100%);
     opacity: 0.3;
   }
   
@@ -54,7 +54,7 @@
   }
   
   .system-id {
-    color: #FF9500;
+    color: #00d4ff;
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 2px;
@@ -66,7 +66,7 @@
     align-items: center;
     gap: 6px;
     padding: 4px 8px;
-    background-color: #1A1D23;
+    background-color: #1a1a1a;
     border: 1px solid #2A2D35;
     clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
   }
@@ -74,7 +74,7 @@
   .status-led {
     width: 6px;
     height: 6px;
-    background-color: #00D4AA;
+    background-color: #00ff88;
     animation: blink 2s ease-in-out infinite;
   }
   
@@ -85,7 +85,7 @@
   
   .status-text {
     font-size: 9px;
-    color: #00D4AA;
+    color: #00ff88;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -123,7 +123,7 @@
   
   .metric-value {
     font-size: 13px;
-    color: #FF9500;
+    color: #00d4ff;
     font-weight: 700;
     letter-spacing: 0.5px;
   }
@@ -136,7 +136,7 @@
   }
   
   .alert-indicator {
-    background-color: #1A1D23;
+    background-color: #1a1a1a;
     border: 1px solid #E23557;
     padding: 4px 10px;
     font-size: 9px;
@@ -185,7 +185,7 @@
     letter-spacing: 1.5px;
     padding: 8px 12px;
     border-left: 2px solid #F7A500;
-    background-color: #1A1D23;
+    background-color: #1a1a1a;
     margin-bottom: 4px;
   }
   
@@ -201,15 +201,15 @@
   }
   
   .nav-item:hover {
-    background-color: #1A1D23;
-    border-left-color: #FF9500;
+    background-color: #1a1a1a;
+    border-left-color: #00d4ff;
     color: #D0D0D0;
   }
   
   .nav-item.active {
-    background-color: #1A1D23;
-    border-left-color: #FF9500;
-    color: #FF9500;
+    background-color: #1a1a1a;
+    border-left-color: #00d4ff;
+    color: #00d4ff;
   }
   
   .filter-section {
@@ -230,7 +230,7 @@
   .filter-item input[type="checkbox"] {
     width: 12px;
     height: 12px;
-    accent-color: #FF9500;
+    accent-color: #00d4ff;
     border: 1px solid #2A2D35;
   }
   
@@ -264,8 +264,8 @@
   }
   
   .agent-node:hover {
-    border-color: #FF9500;
-    background-color: #1A1D23;
+    border-color: #00d4ff;
+    background-color: #1a1a1a;
   }
   
   .agent-node.active::before {
@@ -275,7 +275,7 @@
   
   .agent-code {
     font-size: 11px;
-    color: #FF9500;
+    color: #00d4ff;
     font-weight: 700;
     margin-bottom: 2px;
   }
@@ -343,7 +343,7 @@
   
   .map-title {
     font-size: 18px;
-    color: #FF9500;
+    color: #00d4ff;
     font-weight: 700;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -403,7 +403,7 @@
   }
   
   .toggle.active {
-    background-color: #FF9500;
+    background-color: #00d4ff;
   }
   
   .toggle::after {
@@ -437,7 +437,7 @@
     height: 32px;
     background-color: rgba(26, 29, 35, 0.95);
     border: 1px solid #2A2D35;
-    color: #FF9500;
+    color: #00d4ff;
     font-size: 12px;
     display: flex;
     align-items: center;
@@ -447,9 +447,9 @@
   }
   
   .control-btn:hover {
-    background-color: #FF9500;
+    background-color: #00d4ff;
     color: #000;
-    border-color: #FF9500;
+    border-color: #00d4ff;
   }
   
   .coord-display {
@@ -490,7 +490,7 @@
   }
   
   .time-control {
-    background-color: #1A1D23;
+    background-color: #1a1a1a;
     border: 1px solid #2A2D35;
     height: 44px;
     display: grid;
@@ -537,7 +537,7 @@
   
   .time-value {
     font-size: 11px;
-    color: #FF9500;
+    color: #00d4ff;
     font-weight: 700;
     text-align: right;
     letter-spacing: 0.5px;
@@ -560,7 +560,7 @@
   }
   
   .data-block-header {
-    background-color: #1A1D23;
+    background-color: #1a1a1a;
     padding: 6px 8px;
     border-bottom: 1px solid #2A2D35;
     font-size: 8px;
@@ -593,7 +593,7 @@
   
   .data-row-value {
     font-size: 11px;
-    color: #FF9500;
+    color: #00d4ff;
     font-weight: 700;
   }
   

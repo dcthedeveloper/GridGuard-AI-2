@@ -5,29 +5,29 @@
 // AGENT DEFINITIONS
 // ============================================================================
 const AGENTS = [
-    { id: 'LF', name: 'Load Forecaster', color: '#3B82F6', active: true },
-    { id: 'WA', name: 'Weather Analyst', color: '#06B6D4', active: true },
-    { id: 'GS', name: 'Grid Stabilizer', color: '#10B981', active: true },
-    { id: 'AM', name: 'Asset Manager', color: '#F59E0B', active: true },
-    { id: 'RE', name: 'Renewable Energy', color: '#10B981', active: true },
-    { id: 'DR', name: 'Demand Response', color: '#8B5CF6', active: true },
-    { id: 'HD', name: 'Historical Data', color: '#6366F1', active: true },
-    { id: 'OP', name: 'Optimizer', color: '#EC4899', active: true },
-    { id: 'RS', name: 'Risk Surveillance', color: '#EF4444', active: true },
-    { id: 'RC', name: 'Resource Controller', color: '#14B8A6', active: true },
-    { id: 'ER', name: 'Emergency Response', color: '#F97316', active: true },
-    { id: 'CM', name: 'Comm Manager', color: '#A855F7', active: true }
+    { id: 'LF', name: 'Load Forecaster', color: '#00d4ff', active: true },
+    { id: 'WA', name: 'Weather Analyst', color: '#00d4ff', active: true },
+    { id: 'GS', name: 'Grid Stabilizer', color: '#00ff88', active: true },
+    { id: 'AM', name: 'Asset Manager', color: '#666666', active: false },
+    { id: 'RE', name: 'Renewable Energy', color: '#00ff88', active: true },
+    { id: 'DR', name: 'Demand Response', color: '#666666', active: false },
+    { id: 'HD', name: 'Historical Data', color: '#00d4ff', active: true },
+    { id: 'OP', name: 'Optimizer', color: '#0088ff', active: true },
+    { id: 'RS', name: 'Risk Surveillance', color: '#ff4444', active: true },
+    { id: 'RC', name: 'Resource Controller', color: '#0088ff', active: true },
+    { id: 'ER', name: 'Emergency Response', color: '#ff6b35', active: true },
+    { id: 'CM', name: 'Comm Manager', color: '#00d4ff', active: true }
 ];
 
 // ============================================================================
 // TEXAS GRID REGIONS
 // ============================================================================
 const REGIONS = [
-    { id: 'dallas', name: 'Dallas-Fort Worth', x: 0.55, y: 0.35, load: 12500, capacity: 18000, utilization: 69.4 },
-    { id: 'houston', name: 'Houston Metro', x: 0.70, y: 0.75, load: 15200, capacity: 22000, utilization: 69.1 },
-    { id: 'austin', name: 'Austin-San Antonio', x: 0.50, y: 0.70, load: 9800, capacity: 14500, utilization: 67.6 },
-    { id: 'west', name: 'West Texas', x: 0.20, y: 0.50, load: 6200, capacity: 9500, utilization: 65.3 },
-    { id: 'east', name: 'East Texas', x: 0.75, y: 0.45, load: 4547, capacity: 8500, utilization: 53.5 }
+    { id: 'dallas', name: 'Dallas-Fort Worth', x: 0.55, y: 0.35, load: 16500, capacity: 18000, utilization: 91.7, status: 'critical' },
+    { id: 'houston', name: 'Houston Metro', x: 0.70, y: 0.75, load: 15200, capacity: 22000, utilization: 69.1, status: 'normal' },
+    { id: 'austin', name: 'Austin-San Antonio', x: 0.50, y: 0.70, load: 9800, capacity: 14500, utilization: 67.6, status: 'normal' },
+    { id: 'west', name: 'West Texas', x: 0.20, y: 0.50, load: 6200, capacity: 9500, utilization: 65.3, status: 'normal' },
+    { id: 'east', name: 'East Texas', x: 0.75, y: 0.45, load: 4547, capacity: 8500, utilization: 53.5, status: 'normal' }
 ];
 
 // ============================================================================
@@ -83,10 +83,26 @@ const A2A_SCENARIOS = [
     },
     {
         messages: [
-            { from: 'RS', type: 'alert', content: 'Houston Metro utilization exceeding 75% threshold - ALERT status.' },
+            { from: 'RS', type: 'p1-critical', content: 'P1 CRITICAL: Dallas-Fort Worth utilization at 91.7% - Emergency protocols activated' },
+            { from: 'RC', type: 'tool-call', content: 'Invoking emergency_load_balancing for Dallas region', tool: 'emergency_load_balancing' },
+            { from: 'OP', type: 'message', content: 'Redistributing 800 MW from East Texas to Dallas-Fort Worth region.' },
+            { from: 'GS', type: 'tool-response', content: 'Emergency load transfer complete. Dallas utilization reduced to 84.2%.', tool: 'grid_status' }
+        ]
+    },
+    {
+        messages: [
+            { from: 'AM', type: 'p1-high', content: 'P1 HIGH: Asset maintenance required on Generator Unit TX-7' },
             { from: 'RC', type: 'tool-call', content: 'Invoking load_balancing for Houston region', tool: 'load_balancing' },
             { from: 'OP', type: 'message', content: 'Redistributing 400 MW from East Texas to Houston Metro region.' },
             { from: 'GS', type: 'tool-response', content: 'Load transfer complete. Houston utilization normalized to 71.2%.', tool: 'grid_status' }
+        ]
+    },
+    {
+        messages: [
+            { from: 'HD', type: 'p2-maintenance', content: 'P2 MAINTENANCE: Scheduled system update for historical data archive' },
+            { from: 'CM', type: 'message', content: 'Maintenance window scheduled for 2:00 AM - 4:00 AM CST' },
+            { from: 'OP', type: 'message', content: 'Preparing backup systems for maintenance period.' },
+            { from: 'GS', type: 'tool-response', content: 'Backup systems online. Maintenance protocols ready.', tool: 'system_status' }
         ]
     },
     {
@@ -303,7 +319,7 @@ function initializeAgents() {
     
     AGENTS.forEach(agent => {
         const badge = document.createElement('div');
-        badge.className = 'agent-badge' + (agent.active ? ' active' : '');
+        badge.className = 'agent-badge' + (agent.active ? ' active' : ' idle');
         badge.innerHTML = `
             <div class="agent-abbr" style="color: ${agent.color}">${agent.id}</div>
             <div class="agent-name">${agent.name}</div>
@@ -520,9 +536,9 @@ function initializeForecastChart() {
     const labels = FORECAST_DATA.map(d => d.hour);
     const loads = FORECAST_DATA.map(d => d.load);
     const colors = FORECAST_DATA.map(d => {
-        if (d.utilization > 90) return '#EF4444';
-        if (d.utilization > 75) return '#F59E0B';
-        return '#10B981';
+        if (d.utilization > 90) return '#ff4444';
+        if (d.utilization > 75) return '#ffaa00';
+        return '#00ff88';
     });
     
     chart = new Chart(ctx, {
@@ -532,8 +548,8 @@ function initializeForecastChart() {
             datasets: [{
                 label: 'Forecasted Load (MW)',
                 data: loads,
-                borderColor: '#3B82F6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderColor: '#00d4ff',
+                backgroundColor: 'rgba(0, 212, 255, 0.1)',
                 borderWidth: 2,
                 pointBackgroundColor: colors,
                 pointBorderColor: '#FFFFFF',
