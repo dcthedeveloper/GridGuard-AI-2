@@ -14,8 +14,8 @@
   
   body {
     font-family: 'IBM Plex Mono', monospace;
-    background-color: #0D0F14;
-    color: #D0D0D0;
+    background-color: #000000;
+    color: #FFFFFF;
     font-size: 11px;
     line-height: 1.4;
     overflow: hidden;
@@ -26,9 +26,9 @@
   }
   
   header {
-    background-color: #1A1D23;
+    background-color: #000000;
     height: 44px;
-    border-bottom: 1px solid #FF9500;
+    border-bottom: 1px solid #1A1A1A;
     display: grid;
     grid-template-columns: 280px 1fr 320px;
     align-items: center;
@@ -42,9 +42,9 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, #FF9500 0%, transparent 100%);
-    opacity: 0.3;
+    height: 1px;
+    background: linear-gradient(90deg, #333333 0%, transparent 100%);
+    opacity: 0.5;
   }
   
   .header-left {
@@ -54,7 +54,7 @@
   }
   
   .system-id {
-    color: #FF9500;
+    color: #FFFFFF;
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 2px;
@@ -66,15 +66,15 @@
     align-items: center;
     gap: 6px;
     padding: 4px 8px;
-    background-color: #1A1D23;
-    border: 1px solid #2A2D35;
+    background-color: #0A0A0A;
+    border: 1px solid #1A1A1A;
     clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
   }
   
   .status-led {
     width: 6px;
     height: 6px;
-    background-color: #00D4AA;
+    background-color: #00FF88;
     animation: blink 2s ease-in-out infinite;
   }
   
@@ -85,7 +85,7 @@
   
   .status-text {
     font-size: 9px;
-    color: #00D4AA;
+    color: #00FF88;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -98,23 +98,38 @@
   }
   
   .metric-unit {
-    background-color: #0D0F14;
-    border: 1px solid #2A2D35;
+    background-color: #000000;
+    border: 1px solid #1A1A1A;
     padding: 4px 8px;
-    border-left: 2px solid #3BAFDA;
+    border-left: 2px solid #333333;
+    cursor: help;
+    transition: all 0.2s;
+  }
+  
+  .metric-unit:hover {
+    background-color: #0A0A0A;
+    border-color: #333333;
   }
   
   .metric-unit.warning {
-    border-left-color: #F7A500;
+    border-left-color: #FF8040;
+  }
+  
+  .metric-unit.warning:hover {
+    border-color: #FF8040;
   }
   
   .metric-unit.critical {
-    border-left-color: #E23557;
+    border-left-color: #FF4444;
+  }
+  
+  .metric-unit.critical:hover {
+    border-color: #FF4444;
   }
   
   .metric-label {
     font-size: 8px;
-    color: #707070;
+    color: #888888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: block;
@@ -123,9 +138,17 @@
   
   .metric-value {
     font-size: 13px;
-    color: #FF9500;
+    color: #FFFFFF;
     font-weight: 700;
     letter-spacing: 0.5px;
+  }
+  
+  .metric-unit.warning .metric-value {
+    color: #FF8040;
+  }
+  
+  .metric-unit.critical .metric-value {
+    color: #FF4444;
   }
   
   .header-right {
@@ -136,11 +159,11 @@
   }
   
   .alert-indicator {
-    background-color: #1A1D23;
-    border: 1px solid #E23557;
+    background-color: #0A0A0A;
+    border: 1px solid #FF4444;
     padding: 4px 10px;
     font-size: 9px;
-    color: #E23557;
+    color: #FF4444;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
@@ -148,28 +171,28 @@
   }
   
   .alert-indicator:hover {
-    background-color: #E23557;
-    color: #000;
+    background-color: #FF4444;
+    color: #000000;
   }
   
   .operator-id {
     font-size: 9px;
-    color: #707070;
+    color: #888888;
     text-transform: uppercase;
     padding: 4px 8px;
-    border: 1px solid #2A2D35;
+    border: 1px solid #1A1A1A;
   }
   
   #container {
     display: grid;
     grid-template-columns: 200px 1fr 280px;
-    height: calc(100vh - 44px);
-    background-color: #0D0F14;
+    height: calc(100vh - 64px);
+    background-color: #000000;
   }
   
   nav {
-    background-color: #0D0F14;
-    border-right: 1px solid #2A2D35;
+    background-color: #000000;
+    border-right: 1px solid #1A1A1A;
     overflow-y: auto;
     padding: 12px 0;
   }
@@ -180,19 +203,19 @@
   
   .nav-header {
     font-size: 9px;
-    color: #F7A500;
+    color: #FFFFFF;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     padding: 8px 12px;
-    border-left: 2px solid #F7A500;
-    background-color: #1A1D23;
+    border-left: 2px solid #FFFFFF;
+    background-color: #0A0A0A;
     margin-bottom: 4px;
   }
   
   .nav-item {
     padding: 8px 12px 8px 14px;
     font-size: 10px;
-    color: #909090;
+    color: #888888;
     text-transform: uppercase;
     cursor: pointer;
     border-left: 2px solid transparent;
@@ -201,15 +224,15 @@
   }
   
   .nav-item:hover {
-    background-color: #1A1D23;
-    border-left-color: #FF9500;
-    color: #D0D0D0;
+    background-color: #0A0A0A;
+    border-left-color: #00D9FF;
+    color: #FFFFFF;
   }
   
   .nav-item.active {
-    background-color: #1A1D23;
-    border-left-color: #FF9500;
-    color: #FF9500;
+    background-color: #0A0A0A;
+    border-left-color: #00D9FF;
+    color: #00D9FF;
   }
   
   .filter-section {
@@ -223,15 +246,15 @@
     gap: 8px;
     padding: 6px 0;
     font-size: 9px;
-    color: #707070;
+    color: #888888;
     text-transform: uppercase;
   }
   
   .filter-item input[type="checkbox"] {
     width: 12px;
     height: 12px;
-    accent-color: #FF9500;
-    border: 1px solid #2A2D35;
+    accent-color: #00D9FF;
+    border: 1px solid #333333;
   }
   
   .agent-grid {
@@ -243,8 +266,8 @@
   }
   
   .agent-node {
-    background-color: #0D0F14;
-    border: 1px solid #2A2D35;
+    background-color: #000000;
+    border: 1px solid #1A1A1A;
     padding: 8px 6px;
     text-align: center;
     cursor: pointer;
@@ -259,30 +282,30 @@
     right: -3px;
     width: 4px;
     height: 4px;
-    background-color: #3BAFDA;
-    border: 1px solid #3BAFDA;
+    background-color: #333333;
+    border: 1px solid #333333;
   }
   
   .agent-node:hover {
-    border-color: #FF9500;
-    background-color: #1A1D23;
+    border-color: #00D9FF;
+    background-color: #0A0A0A;
   }
   
   .agent-node.active::before {
-    background-color: #00D4AA;
+    background-color: #00FF88;
     animation: blink 1s ease-in-out infinite;
   }
   
   .agent-code {
     font-size: 11px;
-    color: #FF9500;
+    color: #FFFFFF;
     font-weight: 700;
     margin-bottom: 2px;
   }
   
   .agent-label {
     font-size: 7px;
-    color: #606060;
+    color: #666666;
     text-transform: uppercase;
     letter-spacing: 0.3px;
     line-height: 1.2;
@@ -291,7 +314,7 @@
   main {
     display: flex;
     flex-direction: column;
-    background-color: #0D0F14;
+    background-color: #000000;
     padding: 12px;
     gap: 12px;
     position: relative;
@@ -305,8 +328,8 @@
     width: 100%;
     height: 100%;
     background-image: 
-      linear-gradient(rgba(42, 45, 53, 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(42, 45, 53, 0.3) 1px, transparent 1px);
+      linear-gradient(rgba(26, 26, 26, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26, 26, 26, 0.3) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     opacity: 0.5;
@@ -314,8 +337,8 @@
   
   #mapView {
     flex-grow: 1;
-    background-color: #000;
-    border: 1px solid #2A2D35;
+    background-color: #000000;
+    border: 1px solid #1A1A1A;
     position: relative;
     overflow: hidden;
   }
@@ -327,8 +350,8 @@
     width: 100%;
     height: 100%;
     background-image: 
-      linear-gradient(rgba(255, 149, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 149, 0, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     pointer-events: none;
   }
@@ -343,7 +366,7 @@
   
   .map-title {
     font-size: 18px;
-    color: #FF9500;
+    color: #FFFFFF;
     font-weight: 700;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -352,7 +375,7 @@
   
   .map-subtitle {
     font-size: 9px;
-    color: #606060;
+    color: #666666;
     text-transform: uppercase;
     letter-spacing: 2px;
   }
@@ -361,8 +384,8 @@
     position: absolute;
     top: 12px;
     left: 12px;
-    background-color: rgba(26, 29, 35, 0.95);
-    border: 1px solid #2A2D35;
+    background-color: rgba(10, 10, 10, 0.95);
+    border: 1px solid #1A1A1A;
     padding: 10px;
     width: 180px;
     z-index: 10;
@@ -370,12 +393,12 @@
   
   .layer-controls-header {
     font-size: 8px;
-    color: #F7A500;
+    color: #FFFFFF;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin-bottom: 8px;
     padding-bottom: 4px;
-    border-bottom: 1px solid #2A2D35;
+    border-bottom: 1px solid #1A1A1A;
   }
   
   .layer-row {
@@ -384,8 +407,8 @@
     align-items: center;
     padding: 6px 0;
     font-size: 9px;
-    color: #909090;
-    border-bottom: 1px solid #1A1D23;
+    color: #CCCCCC;
+    border-bottom: 1px solid #0A0A0A;
   }
   
   .layer-row:last-child {
@@ -395,15 +418,15 @@
   .toggle {
     width: 28px;
     height: 12px;
-    background-color: #2A2D35;
-    border: 1px solid #404040;
+    background-color: #1A1A1A;
+    border: 1px solid #333333;
     position: relative;
     cursor: pointer;
     transition: background-color 0.2s;
   }
   
   .toggle.active {
-    background-color: #FF9500;
+    background-color: #00D9FF;
   }
   
   .toggle::after {
@@ -411,7 +434,7 @@
     position: absolute;
     width: 8px;
     height: 8px;
-    background-color: #D0D0D0;
+    background-color: #FFFFFF;
     top: 1px;
     left: 1px;
     transition: transform 0.2s;
@@ -419,7 +442,7 @@
   
   .toggle.active::after {
     transform: translateX(14px);
-    background-color: #000;
+    background-color: #000000;
   }
   
   .tactical-controls {
@@ -435,9 +458,9 @@
   .control-btn {
     width: 32px;
     height: 32px;
-    background-color: rgba(26, 29, 35, 0.95);
-    border: 1px solid #2A2D35;
-    color: #FF9500;
+    background-color: rgba(10, 10, 10, 0.95);
+    border: 1px solid #1A1A1A;
+    color: #FFFFFF;
     font-size: 12px;
     display: flex;
     align-items: center;
@@ -447,20 +470,20 @@
   }
   
   .control-btn:hover {
-    background-color: #FF9500;
-    color: #000;
-    border-color: #FF9500;
+    background-color: #00D9FF;
+    color: #000000;
+    border-color: #00D9FF;
   }
   
   .coord-display {
     position: absolute;
     bottom: 12px;
     left: 12px;
-    background-color: rgba(26, 29, 35, 0.95);
-    border: 1px solid #2A2D35;
+    background-color: rgba(10, 10, 10, 0.95);
+    border: 1px solid #1A1A1A;
     padding: 6px 10px;
     font-size: 9px;
-    color: #3BAFDA;
+    color: #00D9FF;
     letter-spacing: 1px;
   }
   
@@ -471,10 +494,10 @@
     width: 140px;
     height: 100px;
     background-color: rgba(0, 0, 0, 0.95);
-    border: 1px solid #FF9500;
+    border: 1px solid #00D9FF;
     background-image: 
-      linear-gradient(#2A2D35 1px, transparent 1px),
-      linear-gradient(90deg, #2A2D35 1px, transparent 1px);
+      linear-gradient(#1A1A1A 1px, transparent 1px),
+      linear-gradient(90deg, #1A1A1A 1px, transparent 1px);
     background-size: 20px 20px;
     position: relative;
   }
@@ -485,13 +508,13 @@
     top: 4px;
     left: 4px;
     font-size: 7px;
-    color: #F7A500;
+    color: #00D9FF;
     letter-spacing: 1px;
   }
   
   .time-control {
-    background-color: #1A1D23;
-    border: 1px solid #2A2D35;
+    background-color: #0A0A0A;
+    border: 1px solid #1A1A1A;
     height: 44px;
     display: grid;
     grid-template-columns: 120px 1fr 100px;
@@ -502,7 +525,7 @@
   
   .time-label {
     font-size: 8px;
-    color: #F7A500;
+    color: #FFFFFF;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
@@ -511,17 +534,19 @@
     width: 100%;
     height: 4px;
     -webkit-appearance: none;
-    background: #2A2D35;
+    appearance: none;
+    background: #1A1A1A;
     outline: none;
-    border: 1px solid #404040;
+    border: 1px solid #333333;
     position: relative;
   }
   
   .time-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
+    appearance: none;
     width: 12px;
     height: 12px;
-    background: #FF9500;
+    background: #00D9FF;
     cursor: pointer;
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
   }
@@ -529,7 +554,7 @@
   .time-slider::-moz-range-thumb {
     width: 12px;
     height: 12px;
-    background: #FF9500;
+    background: #00D9FF;
     cursor: pointer;
     border: none;
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
@@ -537,15 +562,15 @@
   
   .time-value {
     font-size: 11px;
-    color: #FF9500;
+    color: #00D9FF;
     font-weight: 700;
     text-align: right;
     letter-spacing: 0.5px;
   }
   
   aside {
-    background-color: #0D0F14;
-    border-left: 1px solid #2A2D35;
+    background-color: #000000;
+    border-left: 1px solid #1A1A1A;
     overflow-y: auto;
     padding: 12px;
     display: flex;
@@ -554,17 +579,17 @@
   }
   
   .data-block {
-    background-color: #0D0F14;
-    border: 1px solid #2A2D35;
-    border-left: 2px solid #3BAFDA;
+    background-color: #000000;
+    border: 1px solid #1A1A1A;
+    border-left: 2px solid #333333;
   }
   
   .data-block-header {
-    background-color: #1A1D23;
+    background-color: #0A0A0A;
     padding: 6px 8px;
-    border-bottom: 1px solid #2A2D35;
+    border-bottom: 1px solid #1A1A1A;
     font-size: 8px;
-    color: #F7A500;
+    color: #FFFFFF;
     text-transform: uppercase;
     letter-spacing: 1.5px;
   }
@@ -577,7 +602,7 @@
     display: flex;
     justify-content: space-between;
     padding: 4px 0;
-    border-bottom: 1px solid #1A1D23;
+    border-bottom: 1px solid #0A0A0A;
   }
   
   .data-row:last-child {
@@ -586,32 +611,32 @@
   
   .data-row-label {
     font-size: 8px;
-    color: #707070;
+    color: #888888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   
   .data-row-value {
     font-size: 11px;
-    color: #FF9500;
+    color: #FFFFFF;
     font-weight: 700;
   }
   
   .data-row-value.warning {
-    color: #F7A500;
+    color: #FF8040;
   }
   
   .data-row-value.critical {
-    color: #E23557;
+    color: #FF4444;
   }
   
   .data-row-value.success {
-    color: #00D4AA;
+    color: #00FF88;
   }
   
   .data-row-trend {
     font-size: 7px;
-    color: #606060;
+    color: #666666;
     margin-top: 2px;
   }
   
@@ -621,8 +646,8 @@
   }
   
   .alert-entry {
-    background-color: #0D0F14;
-    border-left: 2px solid #E23557;
+    background-color: #000000;
+    border-left: 2px solid #FF4444;
     padding: 8px;
     margin-bottom: 6px;
     font-size: 9px;
@@ -630,34 +655,34 @@
   }
   
   .alert-entry.warning {
-    border-left-color: #F7A500;
+    border-left-color: #FF8040;
   }
   
   .alert-entry.info {
-    border-left-color: #3BAFDA;
+    border-left-color: #00D9FF;
   }
   
   .alert-timestamp {
-    color: #606060;
+    color: #666666;
     font-size: 8px;
     margin-bottom: 3px;
     letter-spacing: 0.3px;
   }
   
   .alert-text {
-    color: #D0D0D0;
+    color: #FFFFFF;
     margin-bottom: 3px;
   }
   
   .alert-meta {
     font-size: 7px;
-    color: #3BAFDA;
+    color: #00D9FF;
     text-transform: uppercase;
   }
   
   .agent-log-entry {
-    background-color: #0D0F14;
-    border-left: 2px solid #3BAFDA;
+    background-color: #000000;
+    border-left: 2px solid #00D9FF;
     padding: 8px;
     margin-bottom: 6px;
     font-size: 9px;
@@ -665,7 +690,7 @@
   }
   
   .agent-id {
-    color: #3BAFDA;
+    color: #00D9FF;
     font-size: 8px;
     font-weight: 700;
     margin-bottom: 3px;
@@ -674,12 +699,12 @@
   }
   
   .agent-message {
-    color: #909090;
+    color: #888888;
     font-size: 9px;
   }
   
   .agent-timestamp {
-    color: #606060;
+    color: #666666;
     font-size: 7px;
     margin-top: 3px;
   }
@@ -690,20 +715,72 @@
   }
   
   ::-webkit-scrollbar-track {
-    background: #0D0F14;
+    background: #000000;
   }
   
   ::-webkit-scrollbar-thumb {
-    background: #2A2D35;
-    border: 1px solid #404040;
+    background: #1A1A1A;
+    border: 1px solid #333333;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: #FF9500;
+    background: #00D9FF;
+  }
+  
+  /* AI Chatbot Animations */
+  #chatButton {
+    animation: chatPulse 3s ease-in-out infinite;
+  }
+  
+  #chatButton:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.8), 0 0 60px rgba(0, 217, 255, 0.5) !important;
+  }
+  
+  @keyframes chatPulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(0, 217, 255, 0.8), 0 0 60px rgba(0, 217, 255, 0.5);
+    }
+  }
+  
+  /* Status Banner */
+  .status-banner {
+    background: linear-gradient(90deg, #000000 0%, #0A0A0A 100%);
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #1A1A1A;
+    font-size: 8px;
+    color: #666666;
+    letter-spacing: 1px;
+  }
+  
+  .status-banner-item {
+    padding: 0 12px;
+    border-right: 1px solid #1A1A1A;
+  }
+  
+  .status-banner-item:last-child {
+    border-right: none;
+  }
+  
+  .status-banner-item span {
+    color: #00D9FF;
+    font-weight: 700;
   }
 </style>
 </head>
 <body>
+  <div class="status-banner">
+    <div class="status-banner-item">SYSTEM: <span>OPERATIONAL</span></div>
+    <div class="status-banner-item">AGENTS: <span>7/12 ACTIVE</span></div>
+    <div class="status-banner-item">UPTIME: <span>99.97%</span></div>
+    <div class="status-banner-item">LAST UPDATE: <span>2025-10-21 03:45:12 CDT</span></div>
+  </div>
   <header>
     <div class="header-left">
       <div class="system-id">GRIDGUARD AI</div>
@@ -716,24 +793,24 @@
     <div class="header-center">
       <div class="metric-unit">
         <span class="metric-label">FREQUENCY</span>
-        <span class="metric-value" id="frequency">60.02 HZ</span>
+        <span class="metric-value" id="frequency" title="Grid frequency - Target: 60.00 HZ">60.02 HZ</span>
       </div>
       <div class="metric-unit">
         <span class="metric-label">LOAD</span>
-        <span class="metric-value">48,247 MW</span>
+        <span class="metric-value" title="Current power demand">48,247 MW</span>
       </div>
       <div class="metric-unit warning">
         <span class="metric-label">CAPACITY</span>
-        <span class="metric-value">72,500 MW</span>
+        <span class="metric-value" title="Total available capacity">72,500 MW</span>
       </div>
       <div class="metric-unit">
         <span class="metric-label">UTILIZATION</span>
-        <span class="metric-value">66.5%</span>
+        <span class="metric-value" title="Grid utilization percentage">66.5%</span>
       </div>
     </div>
     
     <div class="header-right">
-      <div class="alert-indicator">P1: 5 ALERTS</div>
+      <div class="alert-indicator">● 5 CRITICAL ALERTS</div>
       <div class="operator-id">OPR: ADMIN-001</div>
     </div>
   </header>
@@ -775,92 +852,88 @@
       <div class="nav-section">
         <div class="nav-header">AGENT NETWORK</div>
         <div class="agent-grid">
-          <div class="agent-node active">
+          <div class="agent-node active" title="Load Forecast Agent - Active">
             <div class="agent-code">LF</div>
             <div class="agent-label">LOAD<br>FORECAST</div>
           </div>
-          <div class="agent-node active">
+          <div class="agent-node active" title="Weather Analysis Agent - Active">
             <div class="agent-code">WA</div>
             <div class="agent-label">WEATHER<br>ANALYST</div>
           </div>
-          <div class="agent-node active">
+          <div class="agent-node active" title="Grid Stabilizer Agent - Active">
             <div class="agent-code">GS</div>
             <div class="agent-label">GRID<br>STABILIZER</div>
           </div>
-          <div class="agent-node">
+          <div class="agent-node" title="Asset Manager Agent - Standby">
             <div class="agent-code">AM</div>
             <div class="agent-label">ASSET<br>MANAGER</div>
           </div>
-          <div class="agent-node active">
+          <div class="agent-node active" title="Renewable Energy Agent - Active">
             <div class="agent-code">RE</div>
             <div class="agent-label">RENEWABLE<br>ENERGY</div>
           </div>
-          <div class="agent-node">
+          <div class="agent-node" title="Demand Response Agent - Standby">
             <div class="agent-code">DR</div>
             <div class="agent-label">DEMAND<br>RESPONSE</div>
           </div>
-          <div class="agent-node">
+          <div class="agent-node" title="Historical Data Agent - Standby">
             <div class="agent-code">HD</div>
             <div class="agent-label">HISTORICAL<br>DATA</div>
           </div>
-          <div class="agent-node">
+          <div class="agent-node" title="Optimizer Agent - Standby">
             <div class="agent-code">OP</div>
             <div class="agent-label">OPTIMIZER</div>
           </div>
-          <div class="agent-node active">
+          <div class="agent-node active" title="Risk Surveillance Agent - Active">
             <div class="agent-code">RS</div>
             <div class="agent-label">RISK<br>SURVEILL</div>
           </div>
-          <div class="agent-node active">
+          <div class="agent-node active" title="Resource Control Agent - Active">
             <div class="agent-code">RC</div>
             <div class="agent-label">RESOURCE<br>CONTROL</div>
           </div>
-          <div class="agent-node">
+          <div class="agent-node" title="Emergency Response Agent - Standby">
             <div class="agent-code">ER</div>
             <div class="agent-label">EMERGENCY<br>RESPONSE</div>
           </div>
-          <div class="agent-node active">
+          <div class="agent-node active" title="Communication Manager Agent - Active">
             <div class="agent-code">CM</div>
             <div class="agent-label">COMM<br>MANAGER</div>
           </div>
         </div>
       </div>
     </nav>
-
     <main>
       <div id="mapView">
         <div class="tactical-overlay"></div>
-        
         <div class="map-center-text">
           <div class="map-title">3D GEOSPATIAL GRID</div>
           <div class="map-subtitle">CESIUMJS INTEGRATION LAYER</div>
           <div class="map-subtitle" style="margin-top: 4px;">TEXAS POWER GRID TOPOLOGY</div>
         </div>
-        
         <div class="layer-controls">
           <div class="layer-controls-header">LAYER CONTROLS</div>
           <div class="layer-row">
-            <span>WEATHER OVERLAY</span>
-            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+            <span title="Real-time weather conditions overlay">WEATHER OVERLAY</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')" title="Toggle weather layer"></div>
           </div>
           <div class="layer-row">
-            <span>DEMAND HEATMAP</span>
-            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+            <span title="Power demand heat visualization">DEMAND HEATMAP</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')" title="Toggle demand layer"></div>
           </div>
           <div class="layer-row">
-            <span>GENERATION SITES</span>
-            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+            <span title="Power generation facilities">GENERATION SITES</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')" title="Toggle generation layer"></div>
           </div>
           <div class="layer-row">
-            <span>TRANSMISSION</span>
-            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+            <span title="Transmission line network">TRANSMISSION</span>
+            <div class="toggle active" onclick="this.classList.toggle('active')" title="Toggle transmission layer"></div>
           </div>
           <div class="layer-row">
-            <span>FAULT PREDICT</span>
-            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+            <span title="AI fault prediction zones">FAULT PREDICT</span>
+            <div class="toggle" onclick="this.classList.toggle('active')" title="Toggle fault prediction"></div>
           </div>
         </div>
-        
         <div class="tactical-controls">
           <div class="control-btn" title="ZOOM IN">+</div>
           <div class="control-btn" title="ZOOM OUT">-</div>
@@ -869,22 +942,43 @@
           <div class="control-btn" title="MEASURE">⊣</div>
           <div class="control-btn" title="RESET">⌂</div>
         </div>
-        
         <div class="coord-display">
           LAT: 31.9686°N | LON: -99.9018°W | ALT: 450M
         </div>
-        
         <div class="mini-tactical"></div>
       </div>
-      
       <div class="time-control">
         <div class="time-label">PREDICTION HORIZON</div>
         <input type="range" class="time-slider" min="0" max="24" value="0" step="1" oninput="updateTime(this.value)">
         <div class="time-value" id="timeValue">T+00:00</div>
       </div>
     </main>
-
     <aside>
+      <div class="data-block">
+        <div class="data-block-header">STATUS LEGEND</div>
+        <div class="data-block-content" style="padding: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 9px;">
+            <div style="width: 12px; height: 12px; background-color: #8FC7FF; border: 1px solid #8FC7FF;"></div>
+            <span style="color: #E8EDF4;">NORMAL / INFO</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 9px;">
+            <div style="width: 12px; height: 12px; background-color: #5DD39E; border: 1px solid #5DD39E;"></div>
+            <span style="color: #E8EDF4;">OPTIMAL / SUCCESS</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 9px;">
+            <div style="width: 12px; height: 12px; background-color: #F5A623; border: 1px solid #F5A623;"></div>
+            <span style="color: #E8EDF4;">WARNING / CAUTION</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 9px;">
+            <div style="width: 12px; height: 12px; background-color: #D9534F; border: 1px solid #D9534F;"></div>
+            <span style="color: #E8EDF4;">CRITICAL / ALERT</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 9px; margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E2A3F;">
+            <div style="width: 12px; height: 12px; background-color: #5DD39E; border: 1px solid #5DD39E; animation: blink 1s ease-in-out infinite;"></div>
+            <span style="color: #E8EDF4;">ACTIVE AGENT</span>
+          </div>
+        </div>
+      </div>
       <div class="data-block">
         <div class="data-block-header">SYSTEM METRICS</div>
         <div class="data-block-content">
@@ -935,7 +1029,6 @@
           </div>
         </div>
       </div>
-      
       <div class="data-block" style="flex-grow: 1; display: flex; flex-direction: column;">
         <div class="data-block-header">PREDICTIVE ALERTS</div>
         <div class="alert-feed" style="padding: 8px;">
@@ -961,7 +1054,6 @@
           </div>
         </div>
       </div>
-      
       <div class="data-block" style="flex-grow: 1; display: flex; flex-direction: column;">
         <div class="data-block-header">AGENT ACTIVITY LOG</div>
         <div class="alert-feed" style="padding: 8px;">
@@ -993,15 +1085,12 @@
         </div>
       </div>
     </aside>
-  </div>
-
   <script>
     function updateTime(value) {
       const display = document.getElementById('timeValue');
       const hours = parseInt(value);
       display.textContent = 'T+' + hours.toString().padStart(2, '0') + ':00';
     }
-    
     setInterval(() => {
       const freqElement = document.getElementById('frequency');
       const currentFreq = parseFloat(freqElement.textContent);
@@ -1009,30 +1098,105 @@
       freqElement.textContent = newFreq + ' HZ';
     }, 2000);
     
-    // Chatbot functionality
-    function toggleChat() {
-      const chatWindow = document.getElementById('chatWindow');
-      chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+    // Chatbot drag functionality
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    
+    const chatButton = document.getElementById('chatButton');
+    
+    chatButton.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+    
+    function dragStart(e) {
+      if (e.target === chatButton) {
+        initialX = e.clientX - chatButton.offsetLeft;
+        initialY = e.clientY - chatButton.offsetTop;
+        isDragging = true;
+        chatButton.style.cursor = 'grabbing';
+      }
     }
     
+    function drag(e) {
+      if (isDragging) {
+        e.preventDefault();
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+        
+        // Keep button within viewport
+        const maxX = window.innerWidth - chatButton.offsetWidth;
+        const maxY = window.innerHeight - chatButton.offsetHeight;
+        
+        currentX = Math.max(0, Math.min(currentX, maxX));
+        currentY = Math.max(0, Math.min(currentY, maxY));
+        
+        chatButton.style.left = currentX + 'px';
+        chatButton.style.top = currentY + 'px';
+        chatButton.style.right = 'auto';
+        chatButton.style.bottom = 'auto';
+      }
+    }
+    
+    function dragEnd() {
+      if (isDragging) {
+        isDragging = false;
+        chatButton.style.cursor = 'pointer';
+      }
+    }
+    
+    // Chatbot functionality
+    function toggleChat() {
+      if (isDragging) return; // Don't toggle if dragging
+      const chatWindow = document.getElementById('chatWindow');
+      const isVisible = chatWindow.style.display === 'none' ? 'flex' : 'none';
+      chatWindow.style.display = isVisible;
+      
+      // Position chat window near the button
+      if (isVisible === 'flex') {
+        const buttonRect = chatButton.getBoundingClientRect();
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const chatWidth = 380;
+        const chatHeight = 520;
+        
+        // Position above or below based on available space
+        let chatTop = buttonRect.top - chatHeight - 10;
+        if (chatTop < 0) {
+          chatTop = buttonRect.bottom + 10;
+        }
+        
+        // Position left or right based on available space
+        let chatLeft = buttonRect.left - chatWidth - 10;
+        if (chatLeft < 0) {
+          chatLeft = buttonRect.right + 10;
+        }
+        if (chatLeft + chatWidth > windowWidth) {
+          chatLeft = windowWidth - chatWidth - 20;
+        }
+        
+        chatWindow.style.top = Math.max(10, chatTop) + 'px';
+        chatWindow.style.left = Math.max(10, chatLeft) + 'px';
+        chatWindow.style.bottom = 'auto';
+        chatWindow.style.right = 'auto';
+      }
+    }
     function sendMessage() {
       const input = document.getElementById('chatInput');
       const messages = document.getElementById('chatMessages');
       if (input.value.trim() === '') return;
-      
       const userMsg = document.createElement('div');
       userMsg.className = 'chat-message user';
       userMsg.innerHTML = '<div class="chat-bubble">' + input.value + '</div>';
       messages.appendChild(userMsg);
-      
       const userText = input.value;
       input.value = '';
-      
       setTimeout(() => {
         const aiMsg = document.createElement('div');
         aiMsg.className = 'chat-message ai';
         let response = 'PROCESSING QUERY...';
-        
         if (userText.toLowerCase().includes('status') || userText.toLowerCase().includes('grid')) {
           response = 'GRID STATUS: STABLE | FREQUENCY: 60.01 HZ | LOAD: 52,847 MW | ALL AGENTS OPERATIONAL';
         } else if (userText.toLowerCase().includes('weather') || userText.toLowerCase().includes('forecast')) {
@@ -1042,53 +1206,45 @@
         } else if (userText.toLowerCase().includes('alert')) {
           response = 'ACTIVE ALERTS: 2 WARNINGS | THERMAL SPIKE IN ZONE 3 | WIND DROP DETECTED';
         }
-        
         aiMsg.innerHTML = '<div class="chat-bubble">' + response + '</div>';
         messages.appendChild(aiMsg);
         messages.scrollTop = messages.scrollHeight;
       }, 500);
-      
       messages.scrollTop = messages.scrollHeight;
     }
-    
     document.addEventListener('keypress', function(e) {
       if (e.key === 'Enter' && document.activeElement.id === 'chatInput') {
         sendMessage();
       }
     });
   </script>
-  
   <!-- Chatbot Interface -->
-  <div id="chatButton" onclick="toggleChat()" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background-color: #FF9500; border: 2px solid #FF9500; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #000; z-index: 1000;">AI</div>
-  
-  <div id="chatWindow" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 380px; height: 520px; background-color: #0D0F14; border: 2px solid #FF9500; border-left: 4px solid #FF9500; flex-direction: column; z-index: 1000; font-family: 'IBM Plex Mono', monospace;">
-    <div style="background-color: #1A1D23; padding: 12px; border-bottom: 1px solid #FF9500; display: flex; justify-content: space-between; align-items: center;">
-      <div style="color: #FF9500; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">GRIDGUARD AI ASSISTANT</div>
-      <div onclick="toggleChat()" style="color: #FF9500; cursor: pointer; font-size: 14px; font-weight: 700;">×</div>
+  <div id="chatButton" onclick="toggleChat()" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: linear-gradient(135deg, #00D9FF 0%, #0099FF 100%); border: 3px solid #00D9FF; cursor: grab; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: #FFFFFF; z-index: 1000; box-shadow: 0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(0, 217, 255, 0.3); transition: all 0.3s ease; user-select: none;">AI</div>
+  <div id="chatWindow" style="display: none; position: fixed; bottom: 90px; right: 20px; width: 380px; height: 520px; background-color: #000000; border: 2px solid #00D9FF; border-left: 4px solid #00D9FF; flex-direction: column; z-index: 1000; font-family: 'IBM Plex Mono', monospace; box-shadow: 0 0 30px rgba(0, 217, 255, 0.5), 0 0 60px rgba(0, 217, 255, 0.2);">
+    <div style="background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%); padding: 12px; border-bottom: 1px solid #00D9FF; display: flex; justify-content: space-between; align-items: center;">
+      <div style="color: #00D9FF; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 2px;">GRIDGUARD AI ASSISTANT</div>
+      <div onclick="toggleChat()" style="color: #00D9FF; cursor: pointer; font-size: 14px; font-weight: 700;">×</div>
     </div>
-    
-    <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background-color: #0D0F14;">
+    <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background-color: #000000;">
       <div class="chat-message ai">
-        <div class="chat-bubble" style="background-color: #1A1D23; border-left: 2px solid #3BAFDA; padding: 8px 10px; font-size: 10px; color: #D0D0D0; max-width: 85%;">GRIDGUARD AI READY | ASK ABOUT GRID STATUS, FORECASTS, AGENTS, OR ALERTS</div>
+        <div class="chat-bubble" style="background-color: #0A0A0A; border-left: 2px solid #00D9FF; padding: 8px 10px; font-size: 10px; color: #FFFFFF; max-width: 85%;">GRIDGUARD AI READY | ASK ABOUT GRID STATUS, FORECASTS, AGENTS, OR ALERTS</div>
       </div>
     </div>
-    
-    <div style="background-color: #1A1D23; padding: 12px; border-top: 1px solid #2A2D35; display: flex; gap: 8px;">
-      <input type="text" id="chatInput" placeholder="TYPE COMMAND..." style="flex: 1; background-color: #0D0F14; border: 1px solid #2A2D35; padding: 8px; font-size: 10px; color: #D0D0D0; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase;">
-      <button onclick="sendMessage()" style="background-color: #FF9500; border: 1px solid #FF9500; padding: 8px 16px; font-size: 9px; color: #000; font-weight: 700; cursor: pointer; text-transform: uppercase;">SEND</button>
+    <div style="background-color: #0A0A0A; padding: 12px; border-top: 1px solid #1A1A1A; display: flex; gap: 8px;">
+      <input type="text" id="chatInput" placeholder="TYPE COMMAND..." style="flex: 1; background-color: #000000; border: 1px solid #1A1A1A; padding: 8px; font-size: 10px; color: #FFFFFF; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase;">
+      <button onclick="sendMessage()" style="background: linear-gradient(135deg, #00D9FF 0%, #00B8E6 100%); border: 1px solid #00D9FF; padding: 8px 16px; font-size: 9px; color: #000000; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.2s; box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);">SEND</button>
     </div>
   </div>
-  
   <style>
     .chat-message { display: flex; }
     .chat-message.user { justify-content: flex-end; }
     .chat-message.ai { justify-content: flex-start; }
-    .chat-message.user .chat-bubble { background-color: #FF9500; color: #000; border-left: 2px solid #F7A500; padding: 8px 10px; font-size: 10px; max-width: 85%; }
-    .chat-message.ai .chat-bubble { background-color: #1A1D23; border-left: 2px solid #3BAFDA; padding: 8px 10px; font-size: 10px; color: #D0D0D0; max-width: 85%; }
+    .chat-message.user .chat-bubble { background: linear-gradient(135deg, #00D9FF 0%, #00B8E6 100%); color: #000000; border-left: 2px solid #00D9FF; padding: 8px 10px; font-size: 10px; max-width: 85%; font-weight: 600; }
+    .chat-message.ai .chat-bubble { background-color: #0A0A0A; border-left: 2px solid #00D9FF; padding: 8px 10px; font-size: 10px; color: #FFFFFF; max-width: 85%; }
     #chatMessages::-webkit-scrollbar { width: 4px; }
-    #chatMessages::-webkit-scrollbar-track { background: #0D0F14; }
-    #chatMessages::-webkit-scrollbar-thumb { background: #2A2D35; }
-    #chatMessages::-webkit-scrollbar-thumb:hover { background: #FF9500; }
+    #chatMessages::-webkit-scrollbar-track { background: #000000; }
+    #chatMessages::-webkit-scrollbar-thumb { background: #1A1A1A; border: 1px solid #333333; }
+    #chatMessages::-webkit-scrollbar-thumb:hover { background: #00D9FF; }
   </style>
-</body>
-</html>
+    </main>
+          <div class="filter-item">
